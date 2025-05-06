@@ -1,0 +1,52 @@
+import React, { useState, useEffect } from "react";
+import { ContentSobre, SobreText, SobreTextDiv, SobreTitulo } from "./SobreStyled";
+
+const Sobre: React.FC = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const toggleText = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+  // Hook para monitorar o tamanho da tela
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return (
+    <ContentSobre>
+      <SobreTextDiv>
+        <SobreTitulo>Sobre Nós</SobreTitulo>
+        <SobreText isExpanded={isExpanded || !isMobile}>
+          Felipe Carneiro Alves do Vale iniciou sua trajetória no setor automotivo lavando carros, onde, com muita determinação e paixão pelo que fazia, rapidamente se destacou. Seu talento o levou a se tornar um dos principais vendedores da CODSMAN, onde construiu uma carreira sólida ao longo de 15 anos.
+          Inconformado com a rotina e impulsionado pelo desejo de crescer, Felipe decidiu dar um passo corajoso e empreender. Assim, em dezembro de 2024, nasceu a Felipe Carneiro Motors — uma empresa criada para transformar a experiência de compra e venda de veículos, oferecendo atendimento diferenciado, ambiente confortável e o compromisso genuíno de ajudar cada cliente a realizar o sonho do primeiro carro ou da tão esperada troca.
+          Movido pelo seu espírito empreendedor, Felipe também expandiu seus horizontes e fundou uma barbearia, unindo duas grandes paixões: carros e cuidado pessoal, sempre com o mesmo foco na excelência no atendimento e na realização de sonhos.
+        </SobreText>
+        {isMobile && (
+          <button
+            onClick={toggleText}
+            style={{
+              marginTop: "10px",
+              background: "none",
+              border: "none",
+              color: "#007BFF",
+              cursor: "pointer",
+            }}
+          >
+            {isExpanded ? "Ver menos" : "Ver mais"}
+          </button>
+        )}
+      </SobreTextDiv>
+    </ContentSobre>
+  );
+};
+
+export default Sobre;
