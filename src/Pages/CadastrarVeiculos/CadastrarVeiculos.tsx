@@ -8,6 +8,7 @@ import {
   TbCurrencyReal,
   TbFileDescription,
   TbPhoto,
+  TbDoor,
 } from "react-icons/tb";
 import {
   ButtonCadastrarVeiculos,
@@ -15,6 +16,7 @@ import {
   DivInputsCadastrarVeiculos,
   FormCadastrarVeiculos,
   IconWrapper,
+  InfoCadastro,
   InputCadastrarVeiculos,
   TitleCadastrarVeiculos,
 } from "./CadastrarVeiculoStyyled";
@@ -142,6 +144,7 @@ const CadastrarVeiculos: React.FC = () => {
   return (
    <ContentCadastrarVeiculos>
     <TitleCadastrarVeiculos>Cadastre seu Veículo</TitleCadastrarVeiculos>
+    <InfoCadastro>
     <FormCadastrarVeiculos onSubmit={handleSubmit}>
       <DivInputsCadastrarVeiculos>
         <IconWrapper>
@@ -161,11 +164,11 @@ const CadastrarVeiculos: React.FC = () => {
         </IconWrapper>
         <InputCadastrarVeiculos
           type="text"
-          id="cambio "
+          id="cambio"
           placeholder="Cambio"
             value={state.cambio}
             onChange={handleInputChange}
-        />
+            />
         </DivInputsCadastrarVeiculos>
         
     
@@ -192,7 +195,7 @@ const CadastrarVeiculos: React.FC = () => {
             placeholder="Quilometragem"
             value={state.km}
             onChange={handleInputChange}
-
+            
             />
         </DivInputsCadastrarVeiculos>
         <DivInputsCadastrarVeiculos>
@@ -233,7 +236,7 @@ const CadastrarVeiculos: React.FC = () => {
         </DivInputsCadastrarVeiculos>
         <DivInputsCadastrarVeiculos>
             <IconWrapper>
-            <TbFileDescription />
+            <TbDoor />
 
             </IconWrapper>
             <InputCadastrarVeiculos
@@ -249,7 +252,7 @@ const CadastrarVeiculos: React.FC = () => {
             <TbPhoto />
             </IconWrapper>
             <InputCadastrarVeiculos
-            type="text"
+            type="file"
             id="imagem"
             placeholder="Imagem"
             value={state.imagem}
@@ -277,6 +280,7 @@ const CadastrarVeiculos: React.FC = () => {
 
       <ButtonCadastrarVeiculos type="submit">Cadastrar</ButtonCadastrarVeiculos>
     </FormCadastrarVeiculos>
+          </InfoCadastro>
    </ContentCadastrarVeiculos>
     
   )
