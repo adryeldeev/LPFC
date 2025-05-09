@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 // Tipagem do usuário baseada no modelo do backend
 type User = {
@@ -19,6 +19,7 @@ type AuthContextType = {
   loginAction: (data: LoginData) => Promise<void>;
   logOut: () => void;
   error: string;
+  api: AxiosInstance; // Instância do axios configurada
 };
 
 // Tipagem para os dados de login
@@ -40,6 +41,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [error, setError] = useState<string>("");
   const [token, setToken] = useState<string>(localStorage.getItem("site") || "");
   const navigate = useNavigate();
+
+  // Instância do axios configurada com o token
+  const api = axios.create({
+    baseURL: "http://localhost:8000", // Substitua pela URL da sua API
+    headers: {
+      Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+    },
+  });
 
   const loginAction = async (data: LoginData): Promise<void> => {
     try {
@@ -102,7 +111,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut, error }}>
+    <AuthContext.Provider value={{ token, user, loginAction, logOut, error, api }}>
       {children}
     </AuthContext.Provider>
   );
