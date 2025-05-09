@@ -5,7 +5,7 @@ const useApi = (): AxiosInstance => {
   const { token } = useAuth(); // Obtém o token do contexto
 
   const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL, // Fallback para desenvolvimento
+    baseURL: 'http://localhost:8080/', // Fallback para desenvolvimento
     headers: {
       "Content-Type": "application/json",
     },

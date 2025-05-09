@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
   const loginAction = async (data) => {
     try {
       const response = await axios.post(
-        "https://my-fist-project-production.up.railway.app/login",
+        "http://localhost:8080/login",
         data,
         {
           headers: {
