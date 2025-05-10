@@ -15,7 +15,7 @@ import {
 } from "./LoginStyled";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
-import Logo from "../../Img/Logo.webp";
+import Logo from '../../assets/Logo.webp'; // Ajuste o caminho se necessário
 import { useAuth } from "../../Context/AuthProvider";
 import { NavLink } from "react-router-dom";
 

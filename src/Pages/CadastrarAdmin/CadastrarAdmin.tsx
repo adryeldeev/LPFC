@@ -13,7 +13,7 @@ import { TbLockPassword } from "react-icons/tb";
 import InputField from '../../Components/Input/InputField';
 import { Link } from "react-router-dom";
 import Button from '../../Components/Button/Button';
-import Logo from '../../assets/logo.png'; // Ajuste o caminho se necessário
+import Logo from '../../assets/Logo.webp'; // Ajuste o caminho se necessário
 
 interface FormData {
   username: string;

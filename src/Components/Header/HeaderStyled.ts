@@ -168,7 +168,19 @@ export const Button = styled.button`
     }
 
     `
-
+    export const ButtonLink = styled.button`
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 15px;
+    text-decoration: none;
+  
+    &:hover {
+      color: #007bff;
+    }
+  `;
 
     export const DropdownMenu = styled.div`
     position: absolute;

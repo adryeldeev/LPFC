@@ -4,10 +4,6 @@ import { useAuth } from "../Context/AuthProvider"; // Ajuste o caminho se necess
 const PrivateRouteAdmin = () => {
   const { token, user } = useAuth();
 
-  // Não logado: permite ver páginas públicas (landing page, por exemplo)
-  if (!token) {
-    return <Outlet />; // Permite acessar a landing page ou qualquer outra rota pública
-  }
 
   // Logado, mas não é ADMIN: redireciona para a página inicial
   if (user?.role !== "ADMIN") {
