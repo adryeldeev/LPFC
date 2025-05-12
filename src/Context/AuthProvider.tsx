@@ -1,37 +1,32 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosInstance } from "axios";
+import { jwtDecode } from "jwt-decode";
 
-// Tipagem do usuário baseada no modelo do backend
+// Tipagem do usuário vinda do JWT
 type User = {
   id: number;
-  name: string;
-  email: string;
   role: "USER" | "ADMIN";
-  createdAt: string;
-  updatedAt: string;
+  iat?: number;
+  exp?: number;
 };
 
-// Tipagem do contexto
-type AuthContextType = {
-  token: string;
-  user: User | null; // O usuário pode ser `null` se não estiver logado
-  loginAction: (data: LoginData) => Promise<void>;
-  logOut: () => void;
-  error: string;
-  api: AxiosInstance; // Instância do axios configurada
-};
-
-// Tipagem para os dados de login
 type LoginData = {
   email: string;
   password: string;
 };
 
-// Criação do contexto com tipagem
+type AuthContextType = {
+  token: string;
+  user: User | null;
+  loginAction: (data: LoginData) => Promise<void>;
+  logOut: () => void;
+  error: string;
+  api: AxiosInstance;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Tipagem para o AuthProvider
 type AuthProviderProps = {
   children: ReactNode;
 };
@@ -40,22 +35,21 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string>("");
   const [token, setToken] = useState<string>(localStorage.getItem("site") || "");
+  const [loading, setLoading] = useState<boolean>(true); // Estado de carregamento
+
   const navigate = useNavigate();
 
-  // Instância do axios configurada com o token
   const api = axios.create({
-    baseURL: "http://localhost:8000", // Substitua pela URL da sua API
+    baseURL: "http://localhost:8000",
     headers: {
-      Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+      Authorization: `Bearer ${token}`,
     },
   });
 
   const loginAction = async (data: LoginData): Promise<void> => {
     try {
       const response = await axios.post("http://localhost:8000/login", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
       const res = response.data;
@@ -64,8 +58,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setToken(res.token);
         localStorage.setItem("site", res.token);
 
-        setUser(res.userData);
-        localStorage.setItem("user", JSON.stringify(res.userData));
+        const decodedUser = jwtDecode<User>(res.token);
+        setUser(decodedUser);
 
         setError("");
         navigate("/");
@@ -78,13 +72,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (err.response && err.response.status) {
         switch (err.response.status) {
           case 401:
-            setError("E-mail ou senha incorreta. Tente novamente.");
+            setError("E-mail ou senha incorreta.");
             break;
           case 404:
-            setError("Usuário não encontrado. Verifique o email.");
+            setError("Usuário não encontrado.");
             break;
           default:
-            setError("Erro ao fazer login. Tente novamente mais tarde.");
+            setError("Erro ao fazer login. Tente novamente.");
         }
       } else {
         setError("Erro de conexão. Verifique sua internet.");
@@ -93,25 +87,32 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("site");
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+    if (storedToken) {
+      try {
+        const decodedUser = jwtDecode<User>(storedToken);
+        setToken(storedToken);
+        setUser(decodedUser);
+      } catch (error) {
+        console.error("Erro ao decodificar o token:", error);
+        localStorage.removeItem("site");
+        setToken("");
+        setUser(null);
+      }
     }
+    setLoading(false); // Finaliza o carregamento após a verificação
   }, []);
 
   const logOut = (): void => {
     setUser(null);
     setToken("");
     localStorage.removeItem("site");
-    localStorage.removeItem("user");
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut, error, api }}>
+    <AuthContext.Provider value={{ token, user, loginAction, logOut, error, api,  loading  }}>
       {children}
     </AuthContext.Provider>
   );
@@ -119,7 +120,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 export default AuthProvider;
 
-// Hook para usar o contexto
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

@@ -19,7 +19,7 @@ import {
   BotaoPaginacao,
 } from "./VendedoresStyled";
 import { FaUser, FaPhone } from "react-icons/fa";
-import { useAuth } from "../../Context/AuthProvider";
+import useApi from "../../Api/Api"; // Importa o hook useApi
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 // Tipagem para o estado do formulário e lista de vendedores
@@ -30,7 +30,7 @@ type Vendedor = {
 };
 
 const Vendedores:React.FC = () => {
-const api = useAuth();
+const api = useApi();
 // Função para abrir o modal de edição
 const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Estado para controlar a abertura do modal
 const [formData, setFormData] = useState<Vendedor>({

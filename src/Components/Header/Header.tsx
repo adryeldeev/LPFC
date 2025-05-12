@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../Context/AuthProvider"; // Importa o contexto de autenticação
+import { useNavigate } from "react-router-dom"; // Importação do hook useNavigate
 import {
   ContentNavDiv,
   HeaderContainer,
@@ -20,9 +21,10 @@ import {
 import Logo2 from "../../assets/Logo.webp";
 
 const Header: React.FC = () => {
-  const { user } = useAuth(); // Obtém o usuário autenticado do contexto
+  const { user, logOut } = useAuth(); // Obtém o usuário e a função de logout do contexto
   const [open, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null); // Referência para o dropdown
+  const navigate = useNavigate(); // Inicializa o hook useNavigate
 
   const toggleMenu = (): void => {
     setOpen((prev) => !prev); // Alterna entre true e false
@@ -49,6 +51,15 @@ const Header: React.FC = () => {
     };
   }, []);
 
+  const handleLoginClick = () => {
+    navigate("/login"); // Redireciona para a página de login
+  };
+
+  const handleLogoutClick = () => {
+    logOut(); // Chama a função de logout que limpa o estado e redireciona
+    navigate("/"); // Redireciona para a página inicial após o logout
+  };
+
   return (
     <HeaderContainer>
       <BackgroundImage />
@@ -68,25 +79,25 @@ const Header: React.FC = () => {
               <NavLink href="#servicos">Serviços</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="#contato">contato</NavLink>
+              <NavLink href="#contato">Contato</NavLink>
             </NavItem>
             {!user ? (
               <NavItem>
-                <ButtonLink>Login</ButtonLink>
+                <ButtonLink onClick={handleLoginClick}>Login</ButtonLink> {/* Chama o handleLoginClick */}
               </NavItem>
             ) : (
               <NavItem>
-                <ButtonLink>Sair</ButtonLink>
+                <ButtonLink onClick={handleLogoutClick}>Sair</ButtonLink> {/* Chama o handleLogoutClick */}
               </NavItem>
             )}
             {/* Links adicionais para administradores */}
             {user?.role === "ADMIN" && (
               <>
                 <NavItem>
-                  <NavLink href="/cadastrar-veiculo">Cadastrar Veículo</NavLink>
+                  <NavLink href="/veiculos">Veículos</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="/cadastrar-vendedor">Cadastrar Vendedor</NavLink>
+                  <NavLink href="/vendedores">Vendedores</NavLink>
                 </NavItem>
               </>
             )}
@@ -112,11 +123,11 @@ const Header: React.FC = () => {
               </NavItem>
               {!user ? (
                 <NavItem>
-                  <ButtonLink>Login</ButtonLink>
+                  <ButtonLink onClick={handleLoginClick}>Login</ButtonLink> {/* Chama o handleLoginClick */}
                 </NavItem>
               ) : (
                 <NavItem>
-                  <ButtonLink>Sair</ButtonLink>
+                  <ButtonLink onClick={handleLogoutClick}>Sair</ButtonLink> {/* Chama o handleLogoutClick */}
                 </NavItem>
               )}
               {/* Links adicionais para administradores no menu dropdown */}

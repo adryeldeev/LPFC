@@ -11,7 +11,7 @@ type ApiUrlProviderProps = {
 // Criando o provedor do contexto
 export const ApiUrlProvider: React.FC<ApiUrlProviderProps> = ({ children }) => {
   const [apiUrl, setApiUrl] = useState<string>(
-    import.meta.env.VITE_API_URL || "https://my-fist-project-production.up.railway.app"
+    import.meta.env.VITE_API_URL || "http://localhost:8000"
   );
 
   useEffect(() => {
