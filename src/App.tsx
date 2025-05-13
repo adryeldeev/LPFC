@@ -11,6 +11,8 @@ import Vendedores from "./Pages/Vendedores/Vendedores";
 import Carros from "./Pages/Carros/Carros";
 import Login from "./Pages/Login/Login";
 import CadastrarUser from "./Pages/CadastrarUser/CadastrarUser";
+import { Layout } from "./Layout/Layout";
+import Detalhes from "./Pages/Detalhes/Detalhes";
 
 const App: React.FC = () => {
   return (
@@ -18,17 +20,22 @@ const App: React.FC = () => {
       <AuthProvider>
         <Routes>
           {/* Rotas públicas */}
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastrarUser" element={<CadastrarUser />} />
 
-          {/* Rotas privadas para administradores */}
-          <Route element={<PrivateRouteAdmin />}>
-            <Route path="/cadastrarVendedor" element={<CadastrarVendedor />} />
-            <Route path="/cadastrarVeiculo" element={<CadastrarVeiculos />} />
-            <Route path="/veiculos" element={<Carros />} />
-            <Route path="/vendedores" element={<Vendedores />} />
-            <Route path="/CadastrarAdmin" element={<CadastrarAdmin />} />
+          {/* Layout e Navbar aparecem apenas nas rotas abaixo */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/detalhes/:id" element={<Detalhes />} />
+
+            {/* Rotas privadas para administradores */}
+            <Route element={<PrivateRouteAdmin />}>
+              <Route path="/cadastrarVendedor" element={<CadastrarVendedor />} />
+              <Route path="/cadastrarVeiculo" element={<CadastrarVeiculos />} />
+              <Route path="/veiculos" element={<Carros />} />
+              <Route path="/vendedores" element={<Vendedores />} />
+              <Route path="/CadastrarAdmin" element={<CadastrarAdmin />} />
+            </Route>
           </Route>
         </Routes>
       </AuthProvider>

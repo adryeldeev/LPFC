@@ -50,13 +50,13 @@ export const CarroCard = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-export const CarroImagem = styled.img`
+export const CarroImagem = styled.div`
   width: 100%;
-  max-height: 200px;
-  object-fit: cover;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 8px;
-  display: block;
-  margin: 0 auto;
 `;
 
 export const CarroInfo = styled.div`

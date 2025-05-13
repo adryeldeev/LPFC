@@ -22,7 +22,7 @@ const Sobre: React.FC = () => {
   }, []);
 
   return (
-    <ContentSobre>
+    <ContentSobre id="sobre">
       <SobreTextDiv>
         <SobreTitulo>Sobre Nós</SobreTitulo>
         <SobreText isExpanded={isExpanded || !isMobile}>

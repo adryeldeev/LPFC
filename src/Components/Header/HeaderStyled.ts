@@ -27,7 +27,7 @@ width: 100%;
 height: 100%;
 background-image: url(${ImgFundo2});
 background-size: cover; /* Faz a imagem ocupar toda a tela */
-background-position: center 10%; /* Move a imagem para baixo (20% da altura) */
+background-position: center 5%; /* Move a imagem para baixo (20% da altura) */
 background-repeat: no-repeat;
 z-index: -1;
 opacity: 0.5;
@@ -58,67 +58,8 @@ export const HeroText = styled.div`
 
 
     
-        export const Nav = styled.nav`
-    display: flex;
-justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: 10px;
-    @media (max-width: 768px) {
-        flex-direction: row;
-        align-items: center;
-        }
-        `
 
-export const NavList = styled.ul`
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 20px;
-    @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: flex-start;
-        }
-        
-  @media (max-width: 768px) {
-    display: none; /* Esconde o menu em telas menores */
-  }
-        `
-export const NavItem = styled.li`
-    margin: 0 10px;
-    font-size: 1.2em;
-    color: white;
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
-    @media (max-width: 768px) {
-        margin: 5px 0;
-        font-size: 1em;
-        }
-        `
-export const NavLink = styled.a`
-    color: white;
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
-    @media (max-width: 768px) {
-        font-size: 0.9em;
-        }
-        `
-export const Logo = styled.img`
-    width: 50px;
-    height: 50px;
-    margin-right: 20px;
-    border-radius: 15%;
-    @media (max-width: 768px) {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-        }
-        `
+
         
         export const DivChamada = styled.div`
     display: flex;
@@ -126,7 +67,7 @@ export const Logo = styled.img`
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-top: 150px;
+    margin-top: 50px;
     color: white;
     font-weight: bold;
     z-index: 1;
@@ -148,7 +89,7 @@ export const Logo = styled.img`
 
 export const Button = styled.button`
     background-color: #fff; /* Cor de fundo do botão */
-    margin-top:20px;
+    margin-top:10px;
     color: #000; /* Cor do texto do botão */
     border: none; /* Remove a borda padrão */
     border-radius: 5px; /* Arredonda os cantos do botão */
@@ -168,64 +109,3 @@ export const Button = styled.button`
     }
 
     `
-    export const ButtonLink = styled.button`
-    background-color: transparent;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 10px 15px;
-    text-decoration: none;
-  
-    &:hover {
-      color: #007bff;
-    }
-  `;
-
-    export const DropdownMenu = styled.div`
-    position: absolute;
-    top: 80px;
-    right: 0;
-    background-color: #000;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 3;
-
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    li {
-        margin: 5px 0;
-    }
-       @media (min-width: 769px) {
-    display: none; /* Esconde o menu dropdown em telas maiores */
-  }
-    
-`;
-export const MenuIcon = styled.div`
-    display: none; /* Esconde o ícone do menu em telas maiores */
-    font-size: 2em;
-    padding: 20px;
-    cursor: pointer;
-    @media (max-width: 768px) {
-        display: block; /* Mostra o ícone do menu em telas menores */
-        }
-        `;
-        export const DropdownMenuList = styled.ul`
-  display: none; /* Esconde o menu dropdown por padrão */
-  list-style: none;
-        padding: 20px;
-  padding: 0;
-  margin: 0;
-  gap: 10px;
-  flex-direction: column;
-
-  @media (max-width: 768px) {
-    display: flex; /* Mostra o menu dropdown em telas menores */
-  }
-`;

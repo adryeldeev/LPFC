@@ -1,0 +1,180 @@
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ButtonLink,
+  ContentNavDiv,
+  DropdownMenu,
+  DropdownMenuList,
+  Logo,
+  MenuIcon,
+  Nav,
+  NavItem,
+  NavLink,
+  NavList,
+} from './NavbarStyled';
+import { useAuth } from '../../Context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import Logo2 from '../../assets/Logo.webp';
+
+const Navbar = () => {
+  const { user, logOut } = useAuth();
+  const [open, setOpen] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const toggleMenu = (): void => {
+    setOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setIsScrolled(offset > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleClickOutside = (event: MouseEvent): void => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      const menuIcon = document.getElementById('menu-icon');
+      if (menuIcon && menuIcon.contains(event.target as Node)) {
+        return;
+      }
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleLogoutClick = () => {
+    logOut();
+    navigate('/');
+  };
+
+  const handleNavigateToSection = (sectionId: string) => {
+    if (window.location.pathname !== '/') {
+      navigate(`/?scrollTo=${sectionId}`);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setOpen(false); // fecha menu dropdown no mobile
+  };
+
+  return (
+    <>
+      <Nav className={isScrolled ? 'scrolled' : ''}>
+        <a href="/">
+          <Logo src={Logo2} alt="Logo" />
+        </a>
+        <NavList>
+          <NavItem>
+            <NavLink href="/">Home</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink as="button" onClick={() => handleNavigateToSection('sobre')}>
+              Sobre
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink as="button" onClick={() => handleNavigateToSection('servicos')}>
+              Serviços
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink as="button" onClick={() => handleNavigateToSection('contato')}>
+              Contato
+            </NavLink>
+          </NavItem>
+          {!user ? (
+            <NavItem>
+              <ButtonLink onClick={handleLoginClick}>Login</ButtonLink>
+            </NavItem>
+          ) : (
+            <NavItem>
+              <ButtonLink onClick={handleLogoutClick}>Sair</ButtonLink>
+            </NavItem>
+          )}
+          {user?.role === 'ADMIN' && (
+            <>
+              <NavItem>
+                <NavLink href="/veiculos">Veículos</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/vendedores">Vendedores</NavLink>
+              </NavItem>
+            </>
+          )}
+        </NavList>
+
+        <MenuIcon id="menu-icon" onClick={toggleMenu}>
+          {open ? 'X' : '☰'}
+        </MenuIcon>
+      </Nav>
+
+      <ContentNavDiv>
+        {open && (
+          <DropdownMenu ref={dropdownRef}>
+            <DropdownMenuList>
+              <NavItem>
+                <NavLink as="button" onClick={() => handleNavigateToSection('home')}>
+                  Home
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink as="button" onClick={() => handleNavigateToSection('sobre')}>
+                  Sobre
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink as="button" onClick={() => handleNavigateToSection('servicos')}>
+                  Serviços
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink as="button" onClick={() => handleNavigateToSection('contato')}>
+                  Contato
+                </NavLink>
+              </NavItem>
+              {!user ? (
+                <NavItem>
+                  <ButtonLink onClick={handleLoginClick}>Login</ButtonLink>
+                </NavItem>
+              ) : (
+                <NavItem>
+                  <ButtonLink onClick={handleLogoutClick}>Sair</ButtonLink>
+                </NavItem>
+              )}
+              {user?.role === 'ADMIN' && (
+                <>
+                  <NavItem>
+                    <NavLink href="/veiculos">Veículos</NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink href="/vendedores">Vendedores</NavLink>
+                  </NavItem>
+                </>
+              )}
+            </DropdownMenuList>
+          </DropdownMenu>
+        )}
+      </ContentNavDiv>
+    </>
+  );
+};
+
+export default Navbar;

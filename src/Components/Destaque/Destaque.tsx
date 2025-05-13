@@ -1,46 +1,60 @@
-import React from 'react'
+import useApi from "../../Api/Api";
+import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Button, ContentDestaque, ItemDestaque, ListaDestaque } from "./DestaqueStyled";
 
+const Destaque: React.FC = () => {
+  const api = useApi();
+  const [carros, setCarros] = React.useState<any[]>([]);
+  const baseUrl = "http://localhost:8000";
 
-const Destaque:React.FC= () => {
-  // const api = useApi()
+  const fetchDestaques = async () => {
+    try {
+      const response = await api.get('/destaques');
+      const data = response.data;
+      console.log('Dados do destaque : ', data);
+      const carrosDestaque = data.slice(0, 3); // Limita os carros a no máximo 3
+      setCarros(carrosDestaque);
+    } catch (error) {
+      console.error('Erro ao buscar os destaques:', error.message);
+    }
+  };
 
-  //   const fetchDestaques = async ()=>{
-  //     try{
-  //       const response = await api.get("/destaque")
-  //       const data = response.data
-  //       console.log(data)
+  useEffect(() => {
+    fetchDestaques();
+  }, []);
 
-  //     }catch{
-  //       console.error("Erro ao buscar os destaques")
+  const formatarPreco = (preco: number) => {
+    return preco.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
+  };
 
-  //     }
-       
-  //   }
-  //   useEffect(()=>{
-  //     fetchDestaques()
-  //   }
-  //   ,[])
-
+ 
   return (
-    
-    <div className='destaque'>
-      <h1>Destaques</h1>
-      <div className='destaque-lista'>
-        <div className='destaque-item'>
-          <img src="https://via.placeholder.com/150" alt="Destaque 1" />
-          <p>Destaque 1</p>
-        </div>
-        <div className='destaque-item'>
-          <img src="https://via.placeholder.com/150" alt="Destaque 2" />
-          <p>Destaque 2</p>
-        </div>
-        <div className='destaque-item'>
-          <img src="https://via.placeholder.com/150" alt="Destaque 3" />
-          <p>Destaque 3</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+    <ContentDestaque>
+  <h1>Destaque de Carros</h1>
+  <ListaDestaque>
+    {carros.map((carro) => (
+      <ItemDestaque key={carro.id}>
+        <img
+          src={
+            carro.imagens.length > 0
+              ? `${baseUrl}/uploads/carros/${carro.imagens[0].url}` // Acessa a URL da primeira imagem
+              : "/path/to/default/image" // Imagem padrão caso não haja imagens
+          }
+          alt={carro.modelo}
+        />
+        <h2>
+          {carro.modelo} - {carro.ano}
+        </h2>
+        <p>R$ {formatarPreco(carro.preco)}</p> {/* Formata o preço */}
+        <Button as={Link} to={`/detalhes/${carro.id}`}>
+  Mais detalhes
+</Button>
+      </ItemDestaque>
+    ))}
+  </ListaDestaque>
+</ContentDestaque>
+  );
+};
 
-export default Destaque
+export default Destaque;

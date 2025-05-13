@@ -4,7 +4,7 @@ import { ContentServicos, DivServicos, DivInfo, DivText } from './ServicoStyled'
 
 const Servico:React.FC = () => {
   return (
-    <ContentServicos>
+    <ContentServicos id="servicos">
       <DivServicos>
         <h2>Nossos Serviços</h2>
         <DivInfo>
