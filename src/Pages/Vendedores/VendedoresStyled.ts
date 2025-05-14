@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const VendedoresContainer = styled.div`
+export const TableContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,8 +12,6 @@ export const VendedoresContainer = styled.div`
 export const ContentListaVendedor = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 100%;
     height: 100vh;
     background-color: #f0f0f0;
@@ -22,6 +20,7 @@ export const ContentListaVendedor = styled.div`
     `;
 export const TableVendedores = styled.table`
     width: 80%;
+   
     border-collapse: collapse;
     margin: 20px 0;
     background-color: #fff;
@@ -172,6 +171,11 @@ export const ButtonSalvar = styled.button`
     background-color: #218838;
   }
 `;
+export const Div = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  `
 
 export const PaginacaoContainer = styled.div`
   display: flex;

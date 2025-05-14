@@ -17,10 +17,13 @@ import {
   ButtonSalvar,
   PaginacaoContainer,
   BotaoPaginacao,
+  Div,
+  TableContainer,
 } from "./VendedoresStyled";
 import { FaUser, FaPhone } from "react-icons/fa";
 import useApi from "../../Api/Api"; // Importa o hook useApi
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Importa o hook useNavigate para navegação
 
 // Tipagem para o estado do formulário e lista de vendedores
 type Vendedor = {
@@ -40,6 +43,7 @@ const [formData, setFormData] = useState<Vendedor>({
 });
 
 const [vendedores, setVendedores] = useState<Vendedor[]>([]); // Lista de vendedores
+const navigate = useNavigate(); // Hook para navegação
 const [paginaAtual, setPaginaAtual] = useState<number>(1); // Página atual
 const itensPorPagina = 3; // Número de vendedores por página
 
@@ -135,7 +139,15 @@ const handleVoltar = () => {
 };
   return (
     <ContentListaVendedor>
-      <h1>Vendedores</h1>
+      <Div>
+      <h2>Lista de Vendedores</h2>
+      <Button onClick={()=> navigate('/cadastrarVendedor')}>
+        Adicionar Vendedor
+      </Button>
+
+      </Div>
+  <TableContainer>
+
       <TableVendedores>
         <Thead>
           <Tr>
@@ -157,6 +169,7 @@ const handleVoltar = () => {
           ))}
         </tbody>
       </TableVendedores>
+        </TableContainer>
 
       {/* Paginação */}
       <PaginacaoContainer>

@@ -32,6 +32,17 @@ export const Miniatura = styled.img`
 
 export const InformacoesContainer = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  gap:15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  h2{
+  margin-bottom:40px;
+  }
 `;
 
 export const BotaoWhatsApp = styled.a`

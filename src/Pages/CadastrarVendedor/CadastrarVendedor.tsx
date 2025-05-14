@@ -1,103 +1,109 @@
-import React from 'react'
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { FaUser, FaPhone } from "react-icons/fa";
-import { 
-     ContentCadastrarVendedor,
-    FormCadastrarVendedor,
-    DivInputsCadastrarVendedor,
-    IconWrapper,
-    InputCadastrarVendedor,
-    ButtonCadastrarVendedor,} from './CadastrarVendedorStyled'
-import { useNavigate } from 'react-router-dom'
-import useApi from '../../Api/Api';
+import {
+  ContentCadastrarVendedor,
+  FormCadastrarVendedor,
+  DivInputsCadastrarVendedor,
+  IconWrapper,
+  InputCadastrarVendedor,
+  ButtonCadastrarVendedor,
+} from "./CadastrarVendedorStyled";
+import { useNavigate } from "react-router-dom";
+import useApi from "../../Api/Api";
 
-type State = {
-    nome: string;
-    telefone: string;
-    };
-type Action =
-    | { type: "SET_FIELD"; field: keyof State; value: string }
+// Formata o telefone para padrão internacional do WhatsApp
+const formatTelefone = (telefone: string) => {
+  return telefone
+    .replace(/\D/g, "") // remove tudo que não for número
+    .replace(/^0+/, "") // remove zeros à esquerda
+    .replace(/^(\d{2})(\d{5})(\d{4})$/, "+55$1$2$3");
+};
 
-const initialState: State = {
-    nome: "",
-    telefone: "",
-};
-const reducer = (state: State, action: Action): State => {
-    switch (action.type) {
-        case "SET_FIELD":
-            return {
-                ...state,
-                [action.field]: action.value,
-            };
-        default:
-            return state;
-    }
-};
 const CadastrarVendedor = () => {
-    const navigate = useNavigate()
-    const api = useApi();
+  const navigate = useNavigate();
+  const api = useApi();
 
-    const [state, dispatch] = React.useReducer(reducer, initialState);
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        dispatch({ type: "SET_FIELD", field: name as keyof State, value });
-    }
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        // Validação simples
-        if (!state.nome || !state.telefone) {
-            alert("Por favor, preencha todos os campos.");
-            return;
-        }
-        try {
-            const response = await api.post("/vendedores", {
-                nome: state.nome,
-                telefone: state.telefone,
+  const formik = useFormik({
+    initialValues: {
+      nome: "",
+      telefone: "",
+    },
+    validationSchema: Yup.object({
+      nome: Yup.string().required("Nome é obrigatório"),
+      telefone: Yup.string()
+        .required("Telefone é obrigatório")
+        .matches(
+          /^[1-9]{2}[9]{1}[0-9]{8}$/,
+          "Telefone inválido. Ex: 85999998888 (apenas números)"
+        ),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const telefoneFormatado = formatTelefone(values.telefone);
+        const response = await api.post("/vendedores", {
+          nome: values.nome,
+          telefone: telefoneFormatado,
+        });
 
-            });
-            if (response.status === 200 || response.status === 201) { 
-                alert("Vendedor cadastrado com sucesso!");
-                navigate("/vendedores");
-            } else {
-                alert("Erro ao cadastrar vendedor.");
-            }
-        } catch (error) {
-            console.error("Erro:", error);
+        if (response.status === 200 || response.status === 201) {
+          alert("Vendedor cadastrado com sucesso!");
+          navigate("/vendedores");
+        } else {
+          alert("Erro ao cadastrar vendedor.");
         }
-    };
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro ao cadastrar vendedor.");
+      }
+    },
+  });
+
   return (
     <ContentCadastrarVendedor>
-    <h1>Cadastrar Vendedor</h1>
-    <FormCadastrarVendedor onSubmit={handleSubmit}>
-      <DivInputsCadastrarVendedor>
-        <IconWrapper>
-          <FaUser />
-        </IconWrapper>
-        <InputCadastrarVendedor
-          type="text"
-          placeholder="Nome"
-          name="nome"
-          value={state.nome}
-          onChange={handleChange}
-        />
-      </DivInputsCadastrarVendedor>
+      <h1>Cadastrar Vendedor</h1>
+      <FormCadastrarVendedor onSubmit={formik.handleSubmit}>
+        <DivInputsCadastrarVendedor>
+          <IconWrapper>
+            <FaUser />
+          </IconWrapper>
+          <InputCadastrarVendedor
+            type="text"
+            name="nome"
+            placeholder="Nome"
+            value={formik.values.nome}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.nome && formik.errors.nome && (
+            <div style={{ color: "red", fontSize: "12px" }}>{formik.errors.nome}</div>
+          )}
+        </DivInputsCadastrarVendedor>
 
-      <DivInputsCadastrarVendedor>
-        <IconWrapper>
-          <FaPhone />
-        </IconWrapper>
-        <InputCadastrarVendedor
-          type="text"
-          placeholder="Telefone"
-          name="telefone"
-          value={state.telefone}
-          onChange={handleChange}
-        />
-      </DivInputsCadastrarVendedor>
-    
-      <ButtonCadastrarVendedor type="submit">Cadastrar</ButtonCadastrarVendedor>
-    </FormCadastrarVendedor>
-  </ContentCadastrarVendedor>
-  )
-}
+        <DivInputsCadastrarVendedor>
+          <IconWrapper>
+            <FaPhone />
+          </IconWrapper>
+          <InputCadastrarVendedor
+            type="text"
+            name="telefone"
+            placeholder="Ex: 85999998888 (apenas números)"
+            value={formik.values.telefone}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.telefone && formik.errors.telefone && (
+            <div style={{ color: "red", fontSize: "12px" }}>{formik.errors.telefone}</div>
+          )}
+        </DivInputsCadastrarVendedor>
 
-export default CadastrarVendedor
+        <ButtonCadastrarVendedor type="submit" disabled={formik.isSubmitting}>
+          Cadastrar
+        </ButtonCadastrarVendedor>
+      </FormCadastrarVendedor>
+    </ContentCadastrarVendedor>
+  );
+};
+
+export default CadastrarVendedor;
