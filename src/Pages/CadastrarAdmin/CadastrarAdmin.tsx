@@ -13,21 +13,26 @@ import { TbLockPassword } from "react-icons/tb";
 import InputField from '../../Components/Input/InputField';
 import { Link } from "react-router-dom";
 import Button from '../../Components/Button/Button';
-import Logo from '../../assets/Logo.webp'; // Ajuste o caminho se necessário
+import Logo from '../../assets/Logo.webp';
+import useApi from '../../Api/Api';
+import { toast } from 'react-toastify';
 
 interface FormData {
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
+  role: 'ADMIN'; // fixo para admin
 }
 
 const CadastrarAdmin: React.FC = () => {
+  const api = useApi();
   const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
+    role: 'ADMIN',
   });
 
   const [error, setError] = useState<string>('');
@@ -40,7 +45,7 @@ const CadastrarAdmin: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
@@ -48,9 +53,36 @@ const CadastrarAdmin: React.FC = () => {
       return;
     }
 
-    // Aqui você pode fazer o envio para a API
     setError('');
-    console.log("Formulário enviado:", formData);
+
+    const payload = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+    };
+
+    try {
+      const response = await api.post('/create-admin', payload);
+      
+      if (response.status === 201) {
+        toast.success("Administrador cadastrado com sucesso!");
+        setFormData({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          role: 'ADMIN',
+        });
+      } else {
+        setError("Erro ao cadastrar administrador.");
+        
+      }
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message);
+    }
   };
 
   return (
