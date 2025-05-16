@@ -119,6 +119,7 @@ const Navbar = () => {
         <NavLink href="/veiculos">Veículos</NavLink>
         <NavLink href="/vendedores">Vendedores</NavLink>
         <NavLink href="/marcas">Marcas</NavLink>
+        <NavLink href="/cadastrarAdmin">Cadastrar administrador</NavLink>
       </DropdownContent>
     </AdminDropdown>
   </NavItem>
@@ -171,6 +172,7 @@ const Navbar = () => {
         <NavLink href="/veiculos">Veículos</NavLink>
         <NavLink href="/vendedores">Vendedores</NavLink>
         <NavLink href="/marcas">Marcas</NavLink>
+        <NavLink href="/cadastrarAdmin">Cadastrar administrador</NavLink>
       </DropdownContent>
     </AdminDropdown>
   </NavItem>
