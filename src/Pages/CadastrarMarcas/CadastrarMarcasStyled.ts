@@ -11,15 +11,7 @@ export const Form = styled.form`
 @media (max-width: 768px) {
     width: 100%;
     }
-    background: #f5f5f5;
-    padding: 1rem;
-    border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-    &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
-    }
+  
 
 
 `;

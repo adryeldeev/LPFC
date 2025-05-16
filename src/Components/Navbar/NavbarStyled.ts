@@ -96,6 +96,38 @@ export const NavLink = styled.a`
           color: #007bff;
         }
       `;
+      export const AdminDropdown = styled.div`
+  position: relative;
+  display: inline-block;
+
+  &:hover > div {
+    display: block;
+  }
+`;
+
+export const DropdownContent = styled.div`
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 160px;
+  z-index: 1000;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  top: 100%;
+  right: 0;
+
+  a {
+    color: #000;
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+`;
     
         export const DropdownMenu = styled.div`
         position: absolute;

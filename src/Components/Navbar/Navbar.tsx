@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AdminDropdown,
   ButtonLink,
   ContentNavDiv,
+  DropdownContent,
   DropdownMenu,
   DropdownMenuList,
   Logo,
@@ -110,15 +112,17 @@ const Navbar = () => {
             </NavItem>
           )}
           {user?.role === 'ADMIN' && (
-            <>
-              <NavItem>
-                <NavLink href="/veiculos">Veículos</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="/vendedores">Vendedores</NavLink>
-              </NavItem>
-            </>
-          )}
+  <NavItem>
+    <AdminDropdown>
+      <NavLink as="button">Administração ▾</NavLink>
+      <DropdownContent>
+        <NavLink href="/veiculos">Veículos</NavLink>
+        <NavLink href="/vendedores">Vendedores</NavLink>
+        <NavLink href="/marcas">Marcas</NavLink>
+      </DropdownContent>
+    </AdminDropdown>
+  </NavItem>
+)}
         </NavList>
 
         <MenuIcon id="menu-icon" onClick={toggleMenu}>
@@ -159,16 +163,18 @@ const Navbar = () => {
                   <ButtonLink onClick={handleLogoutClick}>Sair</ButtonLink>
                 </NavItem>
               )}
-              {user?.role === 'ADMIN' && (
-                <>
-                  <NavItem>
-                    <NavLink href="/veiculos">Veículos</NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink href="/vendedores">Vendedores</NavLink>
-                  </NavItem>
-                </>
-              )}
+                 {user?.role === 'ADMIN' && (
+  <NavItem>
+    <AdminDropdown>
+      <NavLink as="button">Administração ▾</NavLink>
+      <DropdownContent>
+        <NavLink href="/veiculos">Veículos</NavLink>
+        <NavLink href="/vendedores">Vendedores</NavLink>
+        <NavLink href="/marcas">Marcas</NavLink>
+      </DropdownContent>
+    </AdminDropdown>
+  </NavItem>
+)}
             </DropdownMenuList>
           </DropdownMenu>
         )}

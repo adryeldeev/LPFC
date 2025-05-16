@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AiOutlineCar } from "react-icons/ai";
@@ -13,7 +13,6 @@ import {
   TbDoor,
   TbPalette,
   TbTag
-  
 } from "react-icons/tb";
 import {
   ButtonCadastrarVeiculos,
@@ -24,6 +23,7 @@ import {
   InfoCadastro,
   InputCadastrarVeiculos,
   TitleCadastrarVeiculos,
+  SelectCadastrarVeiculos,
 } from "./CadastrarVeiculoStyyled";
 import Switch from "react-switch";
 import useApi from "../../Api/Api";
@@ -43,11 +43,30 @@ interface FormularioVeiculo {
   marca: string;
 }
 
+interface Marca {
+  id: number;
+  nome: string;
+}
+
 const CadastrarVeiculos: React.FC = () => {
   const api = useApi();
   const navigate = useNavigate();
-  const [imagens, setImagens] = useState<File[]>([]); // Agora é um array de arquivos
+  const [imagens, setImagens] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [marcas, setMarcas] = useState<Marca[]>([]);
+
+  useEffect(() => {
+    const fetchMarcas = async () => {
+      try {
+        const response = await api.get("/marcas");
+        setMarcas(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar marcas:", error);
+      }
+    };
+
+    fetchMarcas();
+  }, []);
 
   const formik = useFormik<FormularioVeiculo>({
     initialValues: {
@@ -60,7 +79,7 @@ const CadastrarVeiculos: React.FC = () => {
       cor: "",
       combustivel: "",
       cambio: "",
-      descricao: "", 
+      descricao: "",
       marca: "",
     },
     validationSchema: Yup.object({
@@ -83,13 +102,10 @@ const CadastrarVeiculos: React.FC = () => {
       }
 
       setIsSubmitting(true);
-
       try {
         const formData = new FormData();
-
-        // Adiciona os valores ao FormData
         formData.append("modelo", values.modelo);
-        formData.append("marca",values.marca);
+        formData.append("marca", values.marca);
         formData.append("ano", values.ano.toString());
         formData.append("preco", values.preco.toString());
         formData.append("quilometragem", values.quilometragem.toString());
@@ -100,7 +116,7 @@ const CadastrarVeiculos: React.FC = () => {
         formData.append("cambio", values.cambio);
         formData.append("descricao", values.descricao);
         imagens.forEach((imagem) => {
-          formData.append("imagens", imagem); // <- note os colchetes aqui
+          formData.append("imagens", imagem);
         });
 
         const response = await api.post("/carro", formData, {
@@ -108,30 +124,18 @@ const CadastrarVeiculos: React.FC = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log('resosta do dados',response.data)
+
         if (response.status === 200 || response.status === 201) {
           alert("Veículo cadastrado com sucesso!");
           navigate("/veiculos");
           resetForm();
-          setImagens([]); 
-        } else if (response.status === 400) {
-          alert("Erro ao cadastrar veículo. Verifique os dados.");
-        } else if (response.status === 401) {
-          alert("Não autorizado. Faça login novamente.");
+          setImagens([]);
         } else {
           alert("Erro ao cadastrar veículo.");
         }
       } catch (error: any) {
         console.error("Erro ao cadastrar veículo:", error);
-       
-
-        if (error.response) {
-          alert(`Erro: ${error.response.data.message || "Erro ao cadastrar veículo."}`);
-        } else if (error.request) {
-          alert("Erro: Nenhuma resposta do servidor.");
-        } else {
-          alert("Erro desconhecido ao cadastrar veículo.");
-        }
+        alert("Erro ao cadastrar veículo.");
       } finally {
         setIsSubmitting(false);
       }
@@ -145,7 +149,6 @@ const CadastrarVeiculos: React.FC = () => {
         <FormCadastrarVeiculos onSubmit={formik.handleSubmit}>
           {[
             { id: "modelo", icon: <AiOutlineCar />, placeholder: "Modelo" },
-            { id: "marca", icon: <TbTag />, placeholder: "Marca" },
             { id: "cambio", icon: <TbBrandTesla />, placeholder: "Câmbio" },
             { id: "ano", icon: <TbCalendarTime />, placeholder: "Ano" },
             { id: "quilometragem", icon: <TbGauge />, placeholder: "Quilometragem" },
@@ -161,7 +164,7 @@ const CadastrarVeiculos: React.FC = () => {
                 type={id === "ano" || id === "quilometragem" || id === "preco" || id === "portas" ? "number" : "text"}
                 id={id}
                 placeholder={placeholder}
-                value={formik.values[id as keyof typeof formik.values] ?? ""} // Converte null/undefined para string vazia
+                value={formik.values[id as keyof typeof formik.values] ?? ""}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -174,37 +177,57 @@ const CadastrarVeiculos: React.FC = () => {
           ))}
 
           <DivInputsCadastrarVeiculos>
+            <IconWrapper><TbTag /></IconWrapper>
+            <SelectCadastrarVeiculos
+              name="marca"
+              value={formik.values.marca}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Selecione uma marca</option>
+              {marcas.map((marca) => (
+                <option key={marca.id} value={String(marca.id)}>
+                  {marca.nome}
+                </option>
+              ))}
+            </SelectCadastrarVeiculos>
+            {formik.touched.marca && formik.errors.marca && (
+              <div style={{ color: "red", fontSize: "12px" }}>{formik.errors.marca}</div>
+            )}
+          </DivInputsCadastrarVeiculos>
+
+          <DivInputsCadastrarVeiculos>
             <IconWrapper>
               <TbPhoto />
             </IconWrapper>
             <InputCadastrarVeiculos
-  type="file"
-  id="imagens"
-  multiple // Permite selecionar múltiplos arquivos
-  onChange={(e) => {
-    const files = e.target.files;
-    if (files) {
-      setImagens(Array.from(files)); // Converte FileList para array
-    }
-  }}
-/>
+              type="file"
+              id="imagens"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files) {
+                  setImagens(Array.from(files));
+                }
+              }}
+            />
           </DivInputsCadastrarVeiculos>
 
           <DivInputsCadastrarVeiculos>
-          <Switch
-  onChange={(checked) => formik.setFieldValue("destaque", checked)} // Atualiza o valor no formik
-  checked={formik.values.destaque} // Usa o valor do formik
-  onColor="#86d3ff"
-  offColor="#ccc"
-  onHandleColor="#2693e6"
-  offHandleColor="#000"
-  handleDiameter={28}
-  uncheckedIcon={false}
-  checkedIcon={false}
-  height={20}
-  width={48}
-  id="destaque"
-/>
+            <Switch
+              onChange={(checked) => formik.setFieldValue("destaque", checked)}
+              checked={formik.values.destaque}
+              onColor="#86d3ff"
+              offColor="#ccc"
+              onHandleColor="#2693e6"
+              offHandleColor="#000"
+              handleDiameter={28}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              height={20}
+              width={48}
+              id="destaque"
+            />
             <span style={{ marginLeft: "10px" }}>Destacar</span>
           </DivInputsCadastrarVeiculos>
 

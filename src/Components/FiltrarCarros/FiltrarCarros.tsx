@@ -9,7 +9,8 @@ import {
   MarcaItem,
   MarcaImg,
   MarcaNome,
-  BotaoEstoque
+  BotaoEstoque,
+  DivInput
 } from './FiltrarCarrosStyled';
 
 const FiltroVeiculos: React.FC = () => {
@@ -42,12 +43,15 @@ const FiltroVeiculos: React.FC = () => {
     <FiltroContainer>
       <h2>Qual veículo você está buscando?</h2>
       <div>
+        <DivInput>
         <InputPesquisa
           placeholder="Marca ou modelo"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />
         <BotaoPesquisar onClick={handleBuscarNome}>🔍</BotaoPesquisar>
+        </DivInput>
+        <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
       </div>
 
       <ListaMarcas>
@@ -59,7 +63,7 @@ const FiltroVeiculos: React.FC = () => {
         ))}
       </ListaMarcas>
 
-      <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
+      
     </FiltroContainer>
   );
 };

@@ -106,3 +106,12 @@ export const ButtonCadastrarVeiculos = styled.button`
     background-color: #0056b3;
   }
 `;
+
+export const SelectCadastrarVeiculos = styled.select`
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+`;

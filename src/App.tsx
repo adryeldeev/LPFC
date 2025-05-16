@@ -13,6 +13,9 @@ import Login from "./Pages/Login/Login";
 import CadastrarUser from "./Pages/CadastrarUser/CadastrarUser";
 import { Layout } from "./Layout/Layout";
 import Detalhes from "./Pages/Detalhes/Detalhes";
+import Estoque from "./Pages/Estoque/Estoque";
+import CadastrarMarcas from "./Pages/CadastrarMarcas/CadastrarMarcas";
+import Marcas from "./Pages/Marcas/Marcas.";
 
 const App: React.FC = () => {
   return (
@@ -22,10 +25,12 @@ const App: React.FC = () => {
           {/* Rotas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/cadastrarUser" element={<CadastrarUser />} />
+          
 
           {/* Layout e Navbar aparecem apenas nas rotas abaixo */}
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
+              <Route path="/estoque" element={<Estoque />} />
             <Route path="/detalhes/:id" element={<Detalhes />} />
 
             {/* Rotas privadas para administradores */}
@@ -34,7 +39,13 @@ const App: React.FC = () => {
               <Route path="/cadastrarVeiculo" element={<CadastrarVeiculos />} />
               <Route path="/veiculos" element={<Carros />} />
               <Route path="/vendedores" element={<Vendedores />} />
+              <Route path="/marcas" element={<Marcas />} />
               <Route path="/CadastrarAdmin" element={<CadastrarAdmin />} />
+              <Route path="/cadastrarMarca" element={<CadastrarMarcas />} />
+
+
+
+
             </Route>
           </Route>
         </Routes>

@@ -2,6 +2,17 @@ import styled from 'styled-components';
 
 export const FiltroContainer = styled.div`
   padding: 2rem;
+  div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  
+  }
+`;
+export const DivInput = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export const InputPesquisa = styled.input`
