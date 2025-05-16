@@ -16,6 +16,7 @@ import Detalhes from "./Pages/Detalhes/Detalhes";
 import Estoque from "./Pages/Estoque/Estoque";
 import CadastrarMarcas from "./Pages/CadastrarMarcas/CadastrarMarcas";
 import Marcas from "./Pages/Marcas/Marcas.";
+import Venda from "./Pages/Vendas/Vendas";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
               <Route path="/estoque" element={<Estoque />} />
             <Route path="/detalhes/:id" element={<Detalhes />} />
+            <Route path="/venda-seu-carro" element={<Venda />} />
 
             {/* Rotas privadas para administradores */}
             <Route element={<PrivateRouteAdmin />}>
