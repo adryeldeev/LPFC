@@ -3,6 +3,8 @@ import React from 'react'
 import Destaque from '../../Components/Destaque/Destaque'
 import FiltroVeiculos from '../../Components/FiltrarCarros/FiltrarCarros'
 import CardSection from '../../Components/Cards/Cards'
+import Depoimentos from '../../Components/Depoimentos/Depoimentos'
+import Mapa from '../../Components/Mapa/Mapa'
 
 
 const Home:React.FC = () => {
@@ -13,7 +15,8 @@ const Home:React.FC = () => {
  <FiltroVeiculos/>
   <Destaque/>
   <CardSection/>
-
+<Depoimentos/>
+<Mapa/>
     </>
 )
 }
