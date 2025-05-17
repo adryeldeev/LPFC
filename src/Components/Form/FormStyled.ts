@@ -45,8 +45,8 @@ export const CheckboxWrapper = styled.label`
 
 export const Button = styled.button`
   padding: 10px;
-  background-color: #fff;
-  color: #000;
+   background-color: #e30613;
+  color: white;
   border: 1px solid #000;
   border-radius: 6px;
   font-weight: bold;
