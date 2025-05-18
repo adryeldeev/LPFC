@@ -1,57 +1,50 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Zoom from "react-medium-image-zoom";
-import "react-medium-image-zoom/dist/styles.css";
+import { toast } from "react-toastify";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Thumbs } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 import {
-  DetalhesContainer,
+  Container,
   ImagemPrincipalContainer,
+  ImagemPrincipal,
   MiniaturasContainer,
   Miniatura,
-  InformacoesContainer,
+  Infos,
+  Linha,
   BotaoWhatsApp,
+  InfoItem
 } from "./DetalhesStyled";
-import useApi from "../../Api/Api";
-import {
-  TbCalendar,
-  TbRoad,
-  TbPalette,
-  TbGasStation,
-  TbManualGearbox,
-} from "react-icons/tb";
-import { FaWhatsapp } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { FaWhatsapp, FaCalendarAlt, FaGasPump, FaCogs, FaTachometerAlt, FaDoorOpen } from "react-icons/fa";
+import useApi from "../../Api/Api";
+import Mapa from "../../Components/Mapa/Mapa";
 
-type Imagem = {
-  id: number;
-  url: string;
-};
 
-type Carro = {
+
+interface Carro {
   id: number;
+  preco: number;
   modelo: string;
+  marca: string;
   ano: string;
-  preco: string;
-  quilometragem: string;
-  cor: string;
-  combustivel: string;
   cambio: string;
-  descricao: string;
-  imagens: Imagem[];
-};
-
-type Vendedor = {
+  combustivel: string;
+  portas: number;
+  quilometragem: number;
+  imagens: Array<{ id: number; url: string }>;
+}
+interface Vendedor {
   id: number;
   nome: string;
   telefone: string;
-};
-
-const Detalhes: React.FC = () => {
+}
+export const Detalhes = () => {
   const { id } = useParams<{ id: string }>();
   const api = useApi();
-
   const [carro, setCarro] = useState<Carro | null>(null);
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [vendedorSorteado, setVendedorSorteado] = useState<Vendedor | null>(null);
@@ -88,70 +81,40 @@ const Detalhes: React.FC = () => {
 
   const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const telefoneFormatado = vendedorSorteado?.telefone.replace(/\D/g, "");
-  const mensagemWhats = carro
-    ? `Olá, estou interessado no ${carro.modelo}`
-    : "Olá, gostaria de mais informações.";
+  const mensagemWhats = carro ? `Olá, estou interessado no ${carro.modelo}` : "Olá, gostaria de mais informações.";
 
   return (
-    <>
-      <ToastContainer position="top-right" autoClose={4000} />
-      <DetalhesContainer>
-        <ImagemPrincipalContainer>
-          {imagemPrincipal ? (
-            <Zoom>
-              <img
-                src={`${BASE_URL}/uploads/carros/${imagemPrincipal}`}
-                alt={`Imagem principal do carro ${carro?.modelo}`}
-                style={{ width: "100%", borderRadius: "8px" }}
-              />
-            </Zoom>
-          ) : (
-            <Skeleton height={300} />
-          )}
+    <Container>
+      <ImagemPrincipalContainer>
+        <ImagemPrincipal src={`${BASE_URL}/imagens/${imagemPrincipal}`} alt={carro?.modelo} />
+        <MiniaturasContainer>
+          <Swiper direction="vertical" spaceBetween={10} slidesPerView={4} navigation modules={[Navigation]}> 
+            {carro?.imagens.map((img) => (
+              <SwiperSlide key={img.id}>
+                <Miniatura onClick={() => setImagemPrincipal(img.url)} src={`${BASE_URL}/imagens/${img.url}`} alt="Miniatura" />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </MiniaturasContainer>
+      </ImagemPrincipalContainer>
 
-          <MiniaturasContainer>
-            {carro?.imagens.map((imagem) => (
-              <Miniatura
-                key={imagem.id}
-                src={`${BASE_URL}/uploads/carros/${imagem.url}`}
-                alt={`Miniatura ${imagem.id}`}
-                onClick={() => setImagemPrincipal(imagem.url)}
-                className={imagem.url === imagemPrincipal ? "ativa" : ""}
-                loading="lazy"
-              />
-            )) || <Skeleton count={3} width={80} height={60} />}
-          </MiniaturasContainer>
-        </ImagemPrincipalContainer>
-
-        <InformacoesContainer>
-          <h2>{carro?.modelo || <Skeleton width={200} />}</h2>
-          <h3>
-            {carro?.preco
-              ? `R$ ${parseFloat(carro.preco).toLocaleString("pt-BR")}`
-              : <Skeleton width={100} />}
-          </h3>
-          <p><TbCalendar /> <strong>Ano:</strong> {carro?.ano || <Skeleton width={50} />}</p>
-          <p><TbRoad /> <strong>Quilometragem:</strong> {carro?.quilometragem || <Skeleton width={80} />} km</p>
-          <p><TbPalette /> <strong>Cor:</strong> {carro?.cor || <Skeleton width={60} />}</p>
-          <p><TbGasStation /> <strong>Combustível:</strong> {carro?.combustivel || <Skeleton width={80} />}</p>
-          <p><TbManualGearbox /> <strong>Câmbio:</strong> {carro?.cambio || <Skeleton width={60} />}</p>
-          <p>{carro?.descricao || <Skeleton count={3} />}</p>
-
-          {vendedorSorteado && telefoneFormatado && (
-            <BotaoWhatsApp
-              href={`https://wa.me/55${telefoneFormatado}?text=${encodeURIComponent(mensagemWhats)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Fale com o vendedor via WhatsApp`}
-            >
-              <FaWhatsapp style={{ marginRight: "8px" }} />
-              Fale conosco
-            </BotaoWhatsApp>
-          )}
-        </InformacoesContainer>
-      </DetalhesContainer>
-    </>
+      <Infos>
+        <h2>{carro?.modelo || <Skeleton />}</h2>
+        <h3>{carro?.marca || <Skeleton />}</h3>
+        <h4>
+          {carro?.preco ? `R$ ${carro.preco.toLocaleString("pt-BR")}` : <Skeleton width={80} />}
+</h4>
+        <Linha />
+        <InfoItem><FaCalendarAlt /> {carro?.ano || <Skeleton width={40} />}</InfoItem>
+        <InfoItem><FaCogs /> {carro?.cambio || <Skeleton width={80} />}</InfoItem>
+        <InfoItem><FaGasPump /> {carro?.combustivel || <Skeleton width={60} />}</InfoItem>
+        <InfoItem><FaDoorOpen /> {carro?.portas ? `${carro.portas} portas` : <Skeleton width={40} />}</InfoItem>
+        <InfoItem><FaTachometerAlt /> {carro?.quilometragem ? `${carro.quilometragem.toLocaleString()} km` : <Skeleton width={60} />}</InfoItem>
+        <BotaoWhatsApp href={`https://wa.me/55${telefoneFormatado}?text=${encodeURIComponent(mensagemWhats)}`} target="_blank">
+          <FaWhatsapp size={20} /> Fale pelo WhatsApp
+        </BotaoWhatsApp>
+      </Infos>
+      <Mapa/>
+    </Container>
   );
 };
-
-export default Detalhes;

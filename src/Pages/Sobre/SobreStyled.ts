@@ -48,3 +48,43 @@ export const VerMaisButton = styled.button`
     text-decoration: underline;
   }
 `;
+export const DivContato = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding : 20px 90px;
+  margin-top: 20px;
+  width: 100%;
+  heigth:50vh;
+  background-color: #f0f0f0;
+`;
+export const DivInfoContato = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding : 20px 90px;
+  margin-top: 20px;
+  width: 100%;
+  heigth:50vh;
+  background-color: #f0f0f0;
+`;
+export const BotaoWhatsApp = styled.a`
+  display: flex;
+  align-items: center;
+  background-color: #25d366;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #128c7e;
+  }
+`;
+export const MapaContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+`;

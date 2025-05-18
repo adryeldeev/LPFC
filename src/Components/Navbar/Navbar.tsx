@@ -88,7 +88,7 @@ const Navbar = () => {
             <NavLink href="/">Home</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink as="button" onClick={() => handleNavigateToSection('sobre')}>
+            <NavLink  href="/sobre">
               Sobre
             </NavLink>
           </NavItem>

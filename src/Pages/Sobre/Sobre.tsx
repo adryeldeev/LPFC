@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ContentSobre, SobreText, SobreTextDiv, SobreTitulo } from "./SobreStyled";
+import { BotaoWhatsApp, ContentSobre, DivContato, DivInfoContato, SobreText, SobreTextDiv, SobreTitulo } from "./SobreStyled";
+import Mapa from "../../Components/Mapa/Mapa";
+import { FaWhatsapp } from "react-icons/fa";
 
 const Sobre: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,11 +22,13 @@ const Sobre: React.FC = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const mensagemWhats = "Olá, Felipe! Estou interessado em saber mais sobre os veículos disponíveis. Poderia me ajudar?";
+  const telefoneFormatado = "55987733712";
 
   return (
     <ContentSobre id="sobre">
       <SobreTextDiv>
-        <SobreTitulo>Sobre Nós</SobreTitulo>
+        <SobreTitulo>Sobre Felipe Caneiro</SobreTitulo>
         <SobreText isExpanded={isExpanded || !isMobile}>
           Felipe Carneiro Alves do Vale iniciou sua trajetória no setor automotivo lavando carros, onde, com muita determinação e paixão pelo que fazia, rapidamente se destacou. Seu talento o levou a se tornar um dos principais vendedores da CODSMAN, onde construiu uma carreira sólida ao longo de 15 anos.
           Inconformado com a rotina e impulsionado pelo desejo de crescer, Felipe decidiu dar um passo corajoso e empreender. Assim, em dezembro de 2024, nasceu a Felipe Carneiro Motors — uma empresa criada para transformar a experiência de compra e venda de veículos, oferecendo atendimento diferenciado, ambiente confortável e o compromisso genuíno de ajudar cada cliente a realizar o sonho do primeiro carro ou da tão esperada troca.
@@ -45,6 +49,25 @@ const Sobre: React.FC = () => {
           </button>
         )}
       </SobreTextDiv>
+      <DivContato>
+
+        <h2>Atendimento</h2>
+        <DivInfoContato>
+        <span>Entre em contato pelo WhatsApp da Felipe Carneiro:</span>
+
+          <BotaoWhatsApp
+                      href={`https://wa.me/${telefoneFormatado}?text=${encodeURIComponent(mensagemWhats)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Fale com o vendedor via WhatsApp`}
+                    >
+                      <FaWhatsapp style={{ marginRight: "8px" }} />
+                      Fale conosco
+                    </BotaoWhatsApp>
+                  
+                      </DivInfoContato>
+      </DivContato>
+      <Mapa/>
     </ContentSobre>
   );
 };

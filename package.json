@@ -27,6 +27,7 @@
     "react-toastify": "^11.0.5",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.17",
+    "swiper": "^11.2.6",
     "yup": "^1.6.1"
   },
   "devDependencies": {
