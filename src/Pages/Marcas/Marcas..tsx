@@ -32,6 +32,7 @@ const Marcas: React.FC = () => {
   const fetchMarcas = async () => {
     try {
       const response = await api.get("/marcas")
+      console.log('Dados da marca',response.data)
       if (response.status === 200) {
         setMarcas(response.data)
       } else {
@@ -133,7 +134,7 @@ const Marcas: React.FC = () => {
       <ListaMarcaContainer>
         {marcasPagina.map((marca) => (
           <CardMarca key={marca.id}>
-            <img src={`${baseUrl}${marca.imagem}`} alt="Imagem da marca" />
+            <img src={`${baseUrl}${marca.logo}`} alt="Imagem da marca" />
             <h3>{marca.nome}</h3>
 
             <CardActions className="actions">

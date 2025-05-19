@@ -21,7 +21,7 @@ const FiltroVeiculos: React.FC = () => {
 
   useEffect(() => {
     const fetchMarcas = async () => {
-      const res = await api.get('/marcas');
+      const res = await api.get('/marcas-all');
       setMarcas(res.data);
     };
     fetchMarcas();
@@ -57,7 +57,7 @@ const FiltroVeiculos: React.FC = () => {
       <ListaMarcas>
         {marcas.map((marca) => (
           <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
-            <MarcaImg src={`http://localhost:8000${marca.imagem}`} alt={marca.nome} />
+            <MarcaImg src={`http://localhost:8000${marca.logo}`} alt={marca.nome} />
             <MarcaNome>{marca.nome}</MarcaNome>
           </MarcaItem>
         ))}

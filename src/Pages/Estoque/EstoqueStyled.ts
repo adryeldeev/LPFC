@@ -72,3 +72,27 @@ export const Paginacao = styled.div`
     font-size: 0.95rem;
   }
 `;
+
+export const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #ccc;
+    color: #000;
+  }
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    }
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 10px;
+    }
+    }
+`;

@@ -1,6 +1,7 @@
 // Estoque.tsx
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useApi from '../../Api/Api';
 import {
   EstoqueContainer,
@@ -9,7 +10,8 @@ import {
   ImagemVeiculo,
   NomeVeiculo,
   Detalhes,
-  Paginacao
+  Paginacao,
+  Button
 } from './EstoqueStyled';
 import {
   TbCalendar,
@@ -35,12 +37,13 @@ const Estoque: React.FC = () => {
         const marca = searchParams.get('marca');
         const nome = searchParams.get('nome');
 
-        let url = '/carros';
+        let url = '/carros-all';
 
         if (marca) url += `?marca=${marca}`;
         else if (nome) url += `?nome=${nome}`;
 
         const res = await api.get(url);
+        console.log('Veículos:', res.data);
         setVeiculos(res.data);
         setPaginaAtual(1);
       } catch (err) {
@@ -66,8 +69,15 @@ const Estoque: React.FC = () => {
       <h2>Estoque de Veículos</h2>
       <ListaVeiculos>
         {veiculosPagina.map((veiculo) => (
-          <CardVeiculo key={veiculo.id}>
-            <ImagemVeiculo src={`http://localhost:8000${veiculo.imagemPrincipal}`} alt={veiculo.nome} />
+          <CardVeiculo key={veiculo.id} >
+           <ImagemVeiculo
+  src={
+    veiculo.imagens?.length > 0
+      ? `http://localhost:8000/uploads/carros/${veiculo.imagens[0].url}`
+      : '/imagem-nao-disponivel.png'
+  }
+  alt={veiculo.modelo}
+/>
             <NomeVeiculo>{veiculo.modelo}</NomeVeiculo>
             <p>{veiculo.descricao}</p>
             <Detalhes>
@@ -77,8 +87,12 @@ const Estoque: React.FC = () => {
               <div><TbPalette /> {veiculo.cor}</div>
                 <div><strong>R$ {veiculo.preco.toFixed(2).replace('.', ',')}</strong></div>
             </Detalhes>
+   <Button as={Link} to={`/detalhes/${veiculo.id}`}>
+    Mais detalhes
+  </Button>
           </CardVeiculo>
         ))}
+
       </ListaVeiculos>
 
       <Paginacao>

@@ -12,12 +12,12 @@ import Carros from "./Pages/Carros/Carros";
 import Login from "./Pages/Login/Login";
 import CadastrarUser from "./Pages/CadastrarUser/CadastrarUser";
 import { Layout } from "./Layout/Layout";
-import Detalhes from "./Pages/Detalhes/Detalhes";
 import Estoque from "./Pages/Estoque/Estoque";
 import CadastrarMarcas from "./Pages/CadastrarMarcas/CadastrarMarcas";
 import Marcas from "./Pages/Marcas/Marcas.";
 import Venda from "./Pages/Vendas/Vendas";
 import Sobre from "./Pages/Sobre/Sobre";
+import { Detalhes } from "./Pages/Detalhes/Detalhes";
 
 const App: React.FC = () => {
   return (

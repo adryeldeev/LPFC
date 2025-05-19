@@ -39,6 +39,8 @@ export const ListaMarcas = styled.div`
 `;
 
 export const MarcaItem = styled.div`
+  display: flex;
+  flex-direction: column;
   text-align: center;
   cursor: pointer;
   border: 1px solid #ccc;
@@ -49,7 +51,8 @@ export const MarcaItem = styled.div`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    border:1px solid #000;
   }
 `;
 

@@ -11,6 +11,7 @@ const Destaque: React.FC = () => {
   const fetchDestaques = async () => {
     try {
       const response = await api.get('/destaques');
+      
       const data = response.data;
       console.log('Dados do destaque : ', data);
       const carrosDestaque = data.slice(0, 3); // Limita os carros a no máximo 3
@@ -38,7 +39,7 @@ const Destaque: React.FC = () => {
         <img
           src={
             carro.imagens.length > 0
-              ? `${baseUrl}/uploads/carros/${carro.imagens[0].url}` // Acessa a URL da primeira imagem
+              ? `${baseUrl}/uploads/carros/${carro.imagens.url}` // Acessa a URL da primeira imagem
               : "/path/to/default/image" // Imagem padrão caso não haja imagens
           }
           alt={carro.modelo}

@@ -36,7 +36,7 @@ const CadastrarMarcas: React.FC = () => {
         formData.append('nome', values.nome)
         formData.append('imagem', values.imagem as File)
 
-        const response = await api.post('/marcas', formData, {
+        const response = await api.post('/marca', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
