@@ -7,26 +7,38 @@ export const ContentNavDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   z-index: 2;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+   
+  }
 `;
 
 export const Nav = styled.nav`
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 10px 40px;
-  background-color: rgba(0, 0, 0, 0.85); /* mais escuro e semi-transparente */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); /* sombra mais suave */
-  backdrop-filter: blur(4px); /* leve efeito de desfoque no fundo */
-z-index: 10;
+  box-sizing: border-box; // Importante
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
 
-@media (max-width: 768px) {
-  padding: 10px 20px;
-  flex-direction: row;
-}
+
+
+  @media (max-width: 768px) {
+    position: fixed;
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 16px; // padding menor
+  }
 `;
 
 export const NavList = styled.ul`
@@ -35,20 +47,14 @@ export const NavList = styled.ul`
     align-items: center;
     justify-content: center;
     background-color: transparent;
-
-
-    
     padding: 0;
     margin: 0;
     gap: 20px;
     @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
+        display: none; /* Esconde o menu em telas menores */
         }
-        
-  @media (max-width: 768px) {
-    display: none; /* Esconde o menu em telas menores */
-  }
         `
 export const NavItem = styled.li`
     margin: 0 10px;
@@ -95,6 +101,10 @@ export const NavLink = styled.a`
         &:hover {
           color: #007bff;
         }
+          @media (max-width: 768px) {
+            font-size: 14px;
+            padding: 8px 12px;
+          }
       `;
       export const AdminDropdown = styled.div`
   position: relative;
@@ -103,6 +113,7 @@ export const NavLink = styled.a`
   &:hover > div {
     display: block;
   }
+   
 `;
 
 export const DropdownContent = styled.div`
@@ -110,6 +121,7 @@ export const DropdownContent = styled.div`
   position: absolute;
   background-color: #fff;
   min-width: 160px;
+  padding-right:120px;
   z-index: 1000;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
@@ -129,31 +141,44 @@ export const DropdownContent = styled.div`
   }
 `;
     
-        export const DropdownMenu = styled.div`
-        position: absolute;
-        top: 80px;
-        right: 0;
-        background-color: #000;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        z-index: 3;
-    
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-    
-        li {
-            margin: 5px 0;
-        }
-           @media (min-width: 769px) {
+ export const DropdownMenu = styled.div`
+    position: absolute;
+    top: 80px;
+    right: 0;
+    background-color: #000;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 200px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        margin: 5px 0;
+    }
+
+    @media (max-width: 768px) {
+        right: 30px; // Afasta da lateral
+        left: 30px;  // Opcional: deixa centralizado se quiser
+        width: calc(100vw - 40px); // Garante que não ultrapasse a tela
+        max-width:400px; // Limite máximo para não ficar muito largo
+    }
+
+    @media (min-width: 769px) {
         display: none; /* Esconde o menu dropdown em telas maiores */
-      }
-        
-    `;
+    }
+`;
     export const Logo = styled.img`
         width: 50px;
         height: 50px;
@@ -177,7 +202,7 @@ export const DropdownContent = styled.div`
             export const DropdownMenuList = styled.ul`
       display: none; /* Esconde o menu dropdown por padrão */
       list-style: none;
-            padding: 20px;
+      padding: 20px;
       padding: 0;
       margin: 0;
       gap: 10px;

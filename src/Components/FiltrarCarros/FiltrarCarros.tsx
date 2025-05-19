@@ -10,7 +10,9 @@ import {
   MarcaImg,
   MarcaNome,
   BotaoEstoque,
-  DivInput
+  DivInput,
+  FiltroHeader,
+  Div
 } from './FiltrarCarrosStyled';
 
 const FiltroVeiculos: React.FC = () => {
@@ -40,31 +42,34 @@ const FiltroVeiculos: React.FC = () => {
   };
 
   return (
-    <FiltroContainer>
-      <h2>Qual veículo você está buscando?</h2>
-      <div>
-        <DivInput>
-        <InputPesquisa
-          placeholder="Marca ou modelo"
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-        />
-        <BotaoPesquisar onClick={handleBuscarNome}>🔍</BotaoPesquisar>
-        </DivInput>
-        <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
-      </div>
+   <FiltroContainer>
+  <FiltroHeader>
+    <Div>
 
-      <ListaMarcas>
-        {marcas.map((marca) => (
-          <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
-            <MarcaImg src={`http://localhost:8000${marca.logo}`} alt={marca.nome} />
-            <MarcaNome>{marca.nome}</MarcaNome>
-          </MarcaItem>
-        ))}
-      </ListaMarcas>
+    <h2>Qual veículo você está buscando?</h2>
+      <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
+    </Div>
+    <DivInput onSubmit={e => { e.preventDefault(); handleBuscarNome(); }}>
+      <InputPesquisa
+        placeholder="Marca ou modelo"
+        value={busca}
+        onChange={(e) => setBusca(e.target.value)}
+      />
+      <BotaoPesquisar type="submit" aria-label="Pesquisar">
+        🔍
+      </BotaoPesquisar>
+    </DivInput>
+  </FiltroHeader>
 
-      
-    </FiltroContainer>
+  <ListaMarcas>
+    {marcas.map((marca) => (
+      <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
+        <MarcaImg src={`http://localhost:8000${marca.logo}`} alt={marca.nome} />
+        <MarcaNome>{marca.nome}</MarcaNome>
+      </MarcaItem>
+    ))}
+  </ListaMarcas>
+</FiltroContainer>
   );
 };
 

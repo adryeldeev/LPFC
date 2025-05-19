@@ -85,7 +85,7 @@ const Navbar = () => {
         </a>
         <NavList>
           <NavItem>
-            <NavLink href="/">Home</NavLink>
+            <NavLink href="/venda-seu-carro">Venda SEU CARRO</NavLink>
           </NavItem>
           <NavItem>
             <NavLink  href="/sobre">
@@ -93,13 +93,13 @@ const Navbar = () => {
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink as="button" onClick={() => handleNavigateToSection('servicos')}>
-              Serviços
+            <NavLink  href="/financie">
+             Financie
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink as="button" onClick={() => handleNavigateToSection('contato')}>
-              Contato
+            <NavLink  href="/estoque">
+              Estoque
             </NavLink>
           </NavItem>
           {!user ? (

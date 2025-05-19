@@ -7,34 +7,39 @@ export const HeaderContainer = styled.header`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 0; /* Ajuste o padding para 0 */
-  
+  padding: 0;
   color: white;
   font-size: 1.5em;
- 
- 
   position: relative;
   z-index: 0;
   width: 100%;
   height: 70vh;
+
+  @media (max-width: 900px) {
+    height: 30vh;
+  }
+  @media (max-width: 600px) {
+    height: 28vh;
+  }
 `;
 
 export const BackgroundImage = styled.div`
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-image: url(${ImgFundo2});
-background-size: cover; /* Faz a imagem ocupar toda a tela */
-background-position: center 5%; /* Move a imagem para baixo (20% da altura) */
-background-repeat: no-repeat;
-z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(${ImgFundo2});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 
-
-/* Ajuste para afastar a imagem mais para o fundo */
+  @media (max-width: 600px) {
+    background-size: contain;
+   
+  }
 `;
-
 
 
 
