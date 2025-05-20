@@ -86,10 +86,10 @@ const Estoque: React.FC = () => {
               <div><TbSettings /> {veiculo.cambio}</div>
               <div><TbPalette /> {veiculo.cor}</div>
                 <div><strong>R$ {veiculo.preco.toFixed(2).replace('.', ',')}</strong></div>
-            </Detalhes>
    <Button as={Link} to={`/detalhes/${veiculo.id}`}>
     Mais detalhes
   </Button>
+            </Detalhes>
           </CardVeiculo>
         ))}
 

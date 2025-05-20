@@ -9,7 +9,7 @@ export const FiltroContainer = styled.div`
   max-width:100%;
   width: 100%;
   display: flex;
-  justify-content:space-between;
+  flex-direction: column;
   gap: 2rem;
 
   @media (max-width: 600px) {
@@ -24,7 +24,7 @@ export const FiltroHeader = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start; // Alinha à esquerda
   justify-content: center;
   width: 100%;
   @media (max-width: 600px) {
@@ -33,29 +33,28 @@ export const FiltroHeader = styled.div`
 `;
 
 export const DivInput = styled.form`
-  display: flex;
-  gap: 0.5rem;
+  position: relative;
   width: 100%;
   max-width: 420px;
-  align-items: center;
   background: #f5f5f5;
   border-radius: 8px;
   padding: 0.3rem 0.7rem;
+  display: flex;
+  align-items: center;
 
   @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 0.7rem;
     max-width: 100%;
     padding: 0.7rem 0.3rem;
   }
 `;
+
 
 export const InputPesquisa = styled.input`
   flex: 1;
   border: none;
   background: transparent;
   font-size: 1.1rem;
-  padding: 0.7rem 0.5rem;
+  padding: 0.7rem 2.5rem 0.7rem 0.5rem; // espaço à direita para o botão
   outline: none;
   color: #222;
 
@@ -82,9 +81,13 @@ export const Div = styled.div`
   }
 `;
 export const BotaoPesquisar = styled.button`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: #b00;
   color: white;
-  padding: 0.7rem 1.1rem;
+  padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
   border-radius: 8px;
@@ -95,23 +98,24 @@ export const BotaoPesquisar = styled.button`
 
   &:hover {
     background: #d00;
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-50%);
   }
+
   @media (max-width: 600px) {
-    width: 100%;
-    padding: 0.7rem 0.5rem;
+    padding: 0.5rem 0.8rem;
     font-size: 1rem;
   }
 `;
 
 export const ListaMarcas = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 120px));
+  justify-content: start;
   gap: 1.2rem;
   margin-top: 0.5rem;
 
   @media (max-width: 600px) {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     gap: 0.8rem;
   }
 `;
