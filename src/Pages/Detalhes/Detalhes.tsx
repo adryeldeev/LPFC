@@ -1,37 +1,37 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  BotaoWhatsapp,
+  BotaoWhatsappContainer,
+  BoxFichaTecnica,
+  BoxMarcaPreco,
+  DetalhesContainer,
+  GaleriaContainer,
+  InfoCarro,
+  Miniaturas,
+  Principal,
+  MiniaturaWrapper,
+  OverlayTexto,
+  ModalSlider,
+  ModalBackdrop,
+  FecharModal
+} from "./DetalhesStyled";
+import useApi from "../../Api/Api";
+import {
+  FaCalendarAlt,
+  FaCarSide,
+  FaCogs,
+  FaGasPump,
+  FaRoad,
+  FaWhatsapp,
+  FaTimes
+} from "react-icons/fa";
+import Mapa from "../../Components/Mapa/Mapa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import {
-  Container,
-  ImagemPrincipalContainer,
-  ImagemPrincipal,
-  MiniaturasContainer,
-  Miniatura,
-  Infos,
-  Linha,
-  BotaoWhatsApp,
-  InfoItem,
-  ContentDetalhes,
-  MarcaWrapper,
-  MarcaLogo,
-  MarcaNome
-} from "./DetalhesStyled";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import {
-  FaWhatsapp,
-  FaCalendarAlt,
-  FaGasPump,
-  FaCogs,
-  FaTachometerAlt,
-  FaDoorOpen
-} from "react-icons/fa";
-import useApi from "../../Api/Api";
-import Mapa from "../../Components/Mapa/Mapa";
 
 interface Marca {
   id: number;
@@ -70,26 +70,26 @@ export const Detalhes = () => {
   const [carro, setCarro] = useState<Carro | null>(null);
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [vendedorSorteado, setVendedorSorteado] = useState<Vendedor | null>(null);
+  const [mostrarSlider, setMostrarSlider] = useState(false);
+  const baseUrl = "http://localhost:8000";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Busca o carro junto com marca e imagens
         const carroRes = await api.get(`/carro/${id}`);
         if (carroRes.status === 200) {
           const data = carroRes.data as Carro;
           setCarro(data);
-
           if (data.imagens.length > 0) {
             setImagemPrincipal(data.imagens[0].url);
           }
         }
 
-        // 2. Sorteia um vendedor
         const vendedoresRes = await api.get("/vendedores-all");
         if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
           const vendedores = vendedoresRes.data as Vendedor[];
-          const aleatorio = vendedores[Math.floor(Math.random() * vendedores.length)];
+          const aleatorio =
+            vendedores[Math.floor(Math.random() * vendedores.length)];
           setVendedorSorteado(aleatorio);
         }
       } catch (error) {
@@ -101,72 +101,125 @@ export const Detalhes = () => {
     fetchData();
   }, [id]);
 
-  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-  const telefoneFormatado = vendedorSorteado?.telefone.replace(/\D/g, "");
-  const mensagemWhats = carro ? `Olá, estou interessado no ${carro.modelo}` : "Olá, gostaria de mais informações.";
+  if (!carro) return <p>Carregando...</p>;
 
   return (
-    <ContentDetalhes>
-      <Container>
-        <ImagemPrincipalContainer>
-          <ImagemPrincipal
-            src={`${BASE_URL}/uploads/carros/${imagemPrincipal}`}
-            alt={carro?.modelo}
+    <>
+      <GaleriaContainer>
+        <Principal>
+          <img
+            src={`${baseUrl}/uploads/carros/${imagemPrincipal}`}
+            alt="Imagem principal do carro"
           />
-          <MiniaturasContainer>
-            <Swiper
-              direction="vertical"
-              spaceBetween={10}
-              slidesPerView={4}
-              navigation
-              modules={[Navigation]}
+        </Principal>
+
+        <Miniaturas>
+          {carro.imagens.slice(0, 4).map((img, index) => {
+            const isLastVisible =
+              index === 3 && carro.imagens.length > 4;
+
+            return (
+              <MiniaturaWrapper
+                key={img.id}
+                onClick={() => {
+                  if (isLastVisible) {
+                    setMostrarSlider(true);
+                  } else {
+                    setImagemPrincipal(img.url);
+                  }
+                }}
+              >
+                <img
+                  src={`${baseUrl}/uploads/carros/${img.url}`}
+                  alt={`Miniatura ${index + 1}`}
+                />
+                {isLastVisible && <OverlayTexto>Ver mais fotos</OverlayTexto>}
+              </MiniaturaWrapper>
+            );
+          })}
+        </Miniaturas>
+      </GaleriaContainer>
+
+      <DetalhesContainer>
+        <InfoCarro>
+          <BoxMarcaPreco>
+            <img
+              src={`${baseUrl}${carro.marca.logo}`}
+              alt={carro.marca.nome}
+            />
+            <div>
+              <h2>{carro.marca.nome} {carro.modelo}</h2>
+              <h3>
+                por{" "}
+                {carro.preco.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </h3>
+            </div>
+          </BoxMarcaPreco>
+
+          <BoxFichaTecnica>
+            <div className="grid">
+              {[ 
+                { icon: <FaCogs />, label: `Câmbio: ${carro.cambio}` },
+                { icon: <FaCalendarAlt />, label: `Ano: ${carro.ano}` },
+                {
+                  icon: <FaRoad />,
+                  label: `KM: ${carro.quilometragem.toLocaleString()} km`,
+                },
+                {
+                  icon: <FaGasPump />,
+                  label: `Combustível: ${carro.combustivel}`,
+                },
+                { icon: <FaCarSide />, label: `Portas: ${carro.portas}` },
+              ].map((item, index) => (
+                <div className="item" key={index}>
+                  {item.icon} {item.label}
+                </div>
+              ))}
+            </div>
+          </BoxFichaTecnica>
+        </InfoCarro>
+
+        {vendedorSorteado && (
+          <BotaoWhatsappContainer>
+            <BotaoWhatsapp
+              href={`https://wa.me/55${vendedorSorteado.telefone.replace(
+                /\D/g,
+                ""
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              {carro?.imagens.map((img) => (
+              <FaWhatsapp size={20} /> Fale com um vendedor
+            </BotaoWhatsapp>
+          </BotaoWhatsappContainer>
+        )}
+      </DetalhesContainer>
+
+      <Mapa />
+
+      {mostrarSlider && (
+        <ModalBackdrop onClick={() => setMostrarSlider(false)}>
+          <ModalSlider onClick={(e) => e.stopPropagation()}>
+            <FecharModal onClick={() => setMostrarSlider(false)}>
+              <FaTimes size={24} />
+            </FecharModal>
+            <Swiper navigation modules={[Navigation]}>
+              {carro.imagens.map((img) => (
                 <SwiperSlide key={img.id}>
-                  <Miniatura
-                    onClick={() => setImagemPrincipal(img.url)}
-                    src={`${BASE_URL}/uploads/carros/${img.url}`}
-                    alt="Miniatura"
+                  <img
+                    src={`${baseUrl}/uploads/carros/${img.url}`}
+                    alt="Slide"
+                    style={{ width: "100%", height: "auto", borderRadius: "12px" }}
                   />
                 </SwiperSlide>
               ))}
             </Swiper>
-          </MiniaturasContainer>
-        </ImagemPrincipalContainer>
-
-        <Infos>
-          <h2>{carro?.modelo || <Skeleton />}</h2>
-
-          <MarcaWrapper>
-            {carro?.marca.logo ? (
-              <MarcaLogo src={`${BASE_URL}${carro.marca.logo}`} alt={carro.marca.nome} />
-            ) : (
-              <Skeleton width={50} height={30} />
-            )}
-            <MarcaNome>{carro?.marca.nome || <Skeleton width={80} />}</MarcaNome>
-          </MarcaWrapper>
-
-          <h4>
-            {carro?.preco
-              ? `R$ ${carro.preco.toLocaleString("pt-BR")}`
-              : <Skeleton width={80} />}
-          </h4>
-          <Linha />
-          <InfoItem><FaCalendarAlt /> {carro?.ano || <Skeleton width={40} />}</InfoItem>
-          <InfoItem><FaCogs /> {carro?.cambio || <Skeleton width={80} />}</InfoItem>
-          <InfoItem><FaGasPump /> {carro?.combustivel || <Skeleton width={60} />}</InfoItem>
-          <InfoItem><FaDoorOpen /> {carro?.portas ? `${carro.portas} portas` : <Skeleton width={40} />}</InfoItem>
-          <InfoItem><FaTachometerAlt /> {carro?.quilometragem ? `${carro.quilometragem.toLocaleString()} km` : <Skeleton width={60} />}</InfoItem>
-          <BotaoWhatsApp
-            href={`https://wa.me/55${telefoneFormatado}?text=${encodeURIComponent(mensagemWhats)}`}
-            target="_blank"
-          >
-            <FaWhatsapp size={20} /> Fale pelo WhatsApp
-          </BotaoWhatsApp>
-        </Infos>
-      </Container>
-
-      <Mapa />
-    </ContentDetalhes>
+          </ModalSlider>
+        </ModalBackdrop>
+      )}
+    </>
   );
 };

@@ -65,18 +65,6 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const handleNavigateToSection = (sectionId: string) => {
-    if (window.location.pathname !== '/') {
-      navigate(`/?scrollTo=${sectionId}`);
-    } else {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    setOpen(false); // fecha menu dropdown no mobile
-  };
-
   return (
     <>
       <Nav className={isScrolled ? 'scrolled' : ''}>
@@ -85,7 +73,7 @@ const Navbar = () => {
         </a>
         <NavList>
           <NavItem>
-            <NavLink href="/venda-seu-carro">Venda SEU CARRO</NavLink>
+            <NavLink href="/venda-seu-carro">Venda seu carro</NavLink>
           </NavItem>
           <NavItem>
             <NavLink  href="/sobre">
@@ -135,26 +123,24 @@ const Navbar = () => {
         {open && (
           <DropdownMenu ref={dropdownRef}>
             <DropdownMenuList>
-              <NavItem>
-                <NavLink as="button" onClick={() => handleNavigateToSection('home')}>
-                  Home
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink as="button" onClick={() => handleNavigateToSection('sobre')}>
-                  Sobre
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink as="button" onClick={() => handleNavigateToSection('servicos')}>
-                  Serviços
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink as="button" onClick={() => handleNavigateToSection('contato')}>
-                  Contato
-                </NavLink>
-              </NavItem>
+                <NavItem>
+            <NavLink href="/venda-seu-carro">Venda seu carro</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink  href="/sobre">
+              Sobre
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink  href="/financie">
+             Financie
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink  href="/estoque">
+              Estoque
+            </NavLink>
+          </NavItem>
               {!user ? (
                 <NavItem>
                   <ButtonLink onClick={handleLoginClick}>Login</ButtonLink>

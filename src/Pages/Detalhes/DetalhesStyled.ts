@@ -1,284 +1,287 @@
 import styled from "styled-components";
 
-interface SkeletonProps {
-  width?: string;
-  height?: string;
-}
-
-export const ContentDetalhes = styled.div`
+export const GaleriaContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2rem 1rem;
-  max-width: 1280px;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 16px;
   @media (max-width: 768px) {
-    padding: 1rem;
-  }
-`;
-
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 0;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-
-  @media (min-width: 1024px) {
-    flex-direction: row;
-    align-items: flex-start; /* Alinha topo para evitar espaço extra */
-  }
-`;
-
-export const ImagemPrincipalContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  @media (min-width: 1024px) {
-    flex: 0 0 60%; /* Ajusta a largura para telas maiores */
-  }
-    @media (max-width: 768px) {
-    flex: 0 0 100%; /* Ajusta a largura para telas menores */
-  }
-`;
-
-export const ImagemPrincipal = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  object-fit: cover;
-  display: block; /* Evita gaps em imgs inline */
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 300px; /* Altura fixa para telas menores */
-  }
-`;
-
-export const MiniaturasContainer = styled.div`
-  width: 100%;
-  max-height: 320px; /* Controla a altura para miniaturas */
-  overflow: hidden;
-
-  .swiper {
-    height: 100%;
-  }
-
-  .swiper-slide {
-    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
   }
-  .swiper-wrapper {
-    display: flex;
-    gap: 1rem; /* Espaçamento entre miniaturas */
+`;
+
+export const Principal = styled.div`
+  width: 50%;
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
   }
-  .swiper-slide {
-    width: 100px; /* Largura fixa para miniaturas */
-    height:100px; /* Altura fixa para miniaturas */
+`;
+
+export const Miniaturas = styled.div`
+  width: 48%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
     border-radius: 8px;
     cursor: pointer;
-    opacity: 0.9;
-    transition: all 0.2s ease-in-out;
-    border: 2px solid transparent;
+    transition: transform 0.2s ease;
+  }
 
-    &.ativa {
-      opacity: 1;
-      border-color: #22c55e;
-    }
-
-    &:hover {
-      opacity: 1;
+  img:hover {
+    transform: scale(1.03);
+  }
+    @media (max-width: 768px) {
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    img {
+      height: 100px;
     }
   }
-  @media (max-width: 768px) {
-    max-height: 200px; /* Altura reduzida para telas menores */
-    .swiper-slide {
-      width: 80px; /* Largura reduzida para telas menores */
-      height: 80px; /* Altura reduzida para telas menores */
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    img {
+      height: 80px;
     }
   }
+
 `;
-
-export const Miniatura = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 8px;
+export const MiniaturaWrapper = styled.div`
+  position: relative;
   cursor: pointer;
-  opacity: 0.9;
-  transition: all 0.2s ease-in-out;
-  border: 2px solid transparent;
 
-  &.ativa {
-    opacity: 1;
-    border-color: #22c55e;
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
   }
 
-  &:hover {
-    opacity: 1;
+  &:hover img {
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 768px) {
+    img {
+      height: 100px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    img {
+      height: 80px;
+    }
   }
 `;
-export const Infos = styled.div`
-  flex: 1;
+
+export const OverlayTexto = styled.span`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+`;
+
+export const DetalhesContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: auto;
-  min-height: 450px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  gap: 20px;
+  padding: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 480px) {
+    padding: 8px;
+  }
+`;
+export const BoxMarcaPreco = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  img {
+    width: 60px;
+    height: auto;
+    border-radius: 8px;
+  }
 
   h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0;
+    font-size: 24px;
   }
 
   h3 {
-    font-size: 1.25rem;
-    color: #4caf50;
+    color: #008000;
+    font-size: 20px;
+    margin-top: 4px;
+  }
+    @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    img {
+      width: 50px;
+    }
+    h2 {
+      font-size: 20px;
+    }
+`;
+
+export const BoxFichaTecnica = styled.div`
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+    gap: 12px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas menores */
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr; /* 1 coluna em telas muito pequenas */
+    }
   }
 
-  h4 {
-    font-size: 1.5rem;
-    color: #222;
-    font-weight: 700;
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    padding: 10px 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+`;
+export const InfoCarro = styled.div`
+  flex: 1;
+
+  h2 {
+    margin-bottom: 4px;
+    font-size: 24px;
   }
 
-  p,
-  strong {
-    font-size: 1rem;
+  h3 {
+    color: #008000;
+    margin-bottom: 16px;
+    font-size: 20px;
   }
 
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
   @media (max-width: 768px) {
     h2 {
-      font-size: 1.25rem;
+      font-size: 20px;
     }
+
     h3 {
-      font-size: 1rem;
+      font-size: 18px;
     }
-    p {
-      font-size: 0.875rem;
+
+    ul li {
+      font-size: 14px;
     }
   }
-  @media (min-width: 1024px) {
-    flex: 0 0 35%; /* Ajusta a largura para telas maiores */
-  }
+`;
+
+
+export const BotaoWhatsappContainer = styled.div`
+  min-width: 260px;
+  align-self: flex-start;
   @media (max-width: 768px) {
-    flex: 0 0 100%; /* Ajusta a largura para telas menores */
+    align-self: center;
+    margin-top: 16px;
   }
 `;
-export const MarcaWrapper = styled.div`
+
+export const BotaoWhatsapp = styled.a`
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
-  padding: 10px;
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start; /* Alinha os itens à esquerda */
-  }
-`;
-
-export const MarcaLogo = styled.img`
-  width: 50px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  @media (max-width: 768px) {
-    width: 40px; /* Largura reduzida para telas menores */
-  }
-`;
-
-export const MarcaNome = styled.span`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  @media (max-width: 768px) {
-    font-size: 1rem; /* Tamanho reduzido para telas menores */
-  }
-`;
-export const Linha = styled.hr`
-  border: 1px solid #e0e0e0;
-  margin: 1rem 0;
-  width: 100%;
-  @media (max-width: 768px) {
-    margin: 0.5rem 0; /* Margem reduzida para telas menores */
-  }
-`;
-
-export const InfoItem = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  color: #555;
-
-  svg {
-    color: #4caf50;
-  }
-  @media (max-width: 768px) {
-    font-size: 0.875rem; /* Tamanho reduzido para telas menores */
-  }
-`;
-
-export const BotaoWhatsApp = styled.a`
-  margin-top: auto; /* Empurra o botão para baixo */
-  background-color: #25d366;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  padding: 0.75rem;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  background-color: #e30613;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  gap: 8px;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #1ebc59;
+    background-color: #c90010;
   }
-  svg {
-    margin-right: 0.5rem;
-  }
-  @media (max-width: 768px) {
-    font-size: 0.875rem; /* Tamanho reduzido para telas menores */
-    padding: 0.5rem; /* Padding reduzido para telas menores */
-  }
-    
-`;
-
-export const Skeleton = styled.div<SkeletonProps>`
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "1rem"};
-  margin-top: 0.5rem;
-  animation: pulse 1.5s infinite;
-
-  @keyframes pulse {
-    0% {
-      background-color: #e0e0e0;
-    }
-    50% {
-      background-color: #f0f0f0;
-    }
-    100% {
-      background-color: #e0e0e0;
-    }
-  }
-
   @media (max-width: 768px) {
     width: 100%;
+    font-size: 14px;
+    padding: 10px;
   }
+`;
+
+export const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+export const ModalSlider = styled.div`
+  background: #fff;
+  padding: 20px;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 8px;
+  position: relative;
+`;
+
+export const FecharModal = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  z-index: 1000;
 `;
