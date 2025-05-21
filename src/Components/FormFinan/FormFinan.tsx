@@ -79,15 +79,15 @@ export const FormFinanciamento = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { nome, veiculo, telefone, email } = formData;
+    const { nome, veiculo, telefone, email, whatsapp } = formData;
 
-    if (!nome || !telefone || !email || !veiculo) {
+    if (!nome || !telefone || !email || !veiculo || !whatsapp ) {
       setError("Preencha todos os dados");
       return;
     }
 
     try {
-      await api.post("/proposta", formData);
+     const response =  await api.post("/financiamento", formData);
       setFormData({
         nome: "",
         telefone: "",
@@ -97,11 +97,17 @@ export const FormFinanciamento = () => {
         cpf: "",
         dataNascimento: "",
       });
-      setError("");
-      alert("Proposta enviada com sucesso!");
+     if (response.status === 200 || response.status === 201) {
+        alert("Análise enviada com sucesso!");
+        setError("");
+
+      } else {
+        alert("Erro ao enviar análise.");
+      }
+     
     } catch (err) {
-      console.error("Erro ao enviar proposta", err);
-      setError("Erro ao enviar proposta");
+      console.error("Erro ao enviar análise", err);
+      setError("Erro ao enviar análise.");
     }
   };
 

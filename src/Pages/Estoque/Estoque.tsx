@@ -23,6 +23,7 @@ import {
   TbChevronsLeft,
   TbChevronsRight
 } from 'react-icons/tb';
+import Mapa from '../../Components/Mapa/Mapa';
 
 const Estoque: React.FC = () => {
   const [veiculos, setVeiculos] = useState<any[]>([]);
@@ -30,6 +31,7 @@ const Estoque: React.FC = () => {
   const itensPorPagina = 6;
   const [searchParams] = useSearchParams();
   const api = useApi();
+  const baseUrl = "http://localhost:8000"
 
   useEffect(() => {
     const fetchVeiculos = async () => {
@@ -43,7 +45,6 @@ const Estoque: React.FC = () => {
         else if (nome) url += `?nome=${nome}`;
 
         const res = await api.get(url);
-        console.log('Veículos:', res.data);
         setVeiculos(res.data);
         setPaginaAtual(1);
       } catch (err) {
@@ -64,28 +65,36 @@ const Estoque: React.FC = () => {
   const irParaProxima = () => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas));
   const irParaUltima = () => setPaginaAtual(totalPaginas);
 
+   const formatarPreco = (preco: number) => {
+    return preco.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
+  };
+
   return (
+    <>
     <EstoqueContainer>
       <h2>Estoque de Veículos</h2>
       <ListaVeiculos>
         {veiculosPagina.map((veiculo) => (
           <CardVeiculo key={veiculo.id} >
+
            <ImagemVeiculo
   src={
     veiculo.imagens?.length > 0
-      ? `http://localhost:8000/uploads/carros/${veiculo.imagens[0].url}`
+      ? `${baseUrl}/uploads/carros/${veiculo.imagens[0].url}`
       : '/imagem-nao-disponivel.png'
   }
   alt={veiculo.modelo}
 />
+            <img src={`${baseUrl}${veiculo.marca.logo}`} alt={veiculo.marca.nome} />
+
+
             <NomeVeiculo>{veiculo.modelo}</NomeVeiculo>
-            <p>{veiculo.descricao}</p>
             <Detalhes>
               <div><TbCalendar /> {veiculo.ano}</div>
               <div><TbGauge /> {veiculo.km} km</div>
               <div><TbSettings /> {veiculo.cambio}</div>
               <div><TbPalette /> {veiculo.cor}</div>
-                <div><strong>R$ {veiculo.preco.toFixed(2).replace('.', ',')}</strong></div>
+                <div><strong>  R$ {formatarPreco(veiculo.preco)}</strong></div>
    <Button as={Link} to={`/detalhes/${veiculo.id}`}>
     Mais detalhes
   </Button>
@@ -103,6 +112,8 @@ const Estoque: React.FC = () => {
         <button onClick={irParaUltima} disabled={paginaAtual === totalPaginas}><TbChevronsRight /></button>
       </Paginacao>
     </EstoqueContainer>
+    <Mapa/>
+    </>
   );
 };
 

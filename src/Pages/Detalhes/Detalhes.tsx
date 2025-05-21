@@ -102,6 +102,9 @@ export const Detalhes = () => {
   }, [id]);
 
   if (!carro) return <p>Carregando...</p>;
+  const formatarPreco = (preco: number) => {
+    return preco.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
+  };
 
   return (
     <>
@@ -150,11 +153,7 @@ export const Detalhes = () => {
             <div>
               <h2>{carro.marca.nome} {carro.modelo}</h2>
               <h3>
-                por{" "}
-                {carro.preco.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
+                R$ {formatarPreco(carro.preco)}
               </h3>
             </div>
           </BoxMarcaPreco>

@@ -57,13 +57,19 @@ export const Button = styled.button`
   padding: 10px 20px;
   background-color: #fff;
   color: #000;
-  border: 1px solid #000;
+  border: 1px solid  #e30613;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+
+
+
+
   
   &:hover {
-    background-color: #ccc;
-    color: #000;
+   background-color: #e30613;
+  color: white;
   }
     &:disabled {
         background-color: #ccc;

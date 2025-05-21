@@ -39,7 +39,7 @@ const Destaque: React.FC = () => {
         <img
           src={
             carro.imagens.length > 0
-              ? `${baseUrl}/uploads/carros/${carro.imagens.url}` // Acessa a URL da primeira imagem
+              ? `${baseUrl}/uploads/carros/${carro.imagens[0].url}` // Acessa a URL da primeira imagem
               : "/path/to/default/image" // Imagem padrão caso não haja imagens
           }
           alt={carro.modelo}
