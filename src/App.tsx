@@ -19,6 +19,8 @@ import Venda from "./Pages/Vendas/Vendas";
 import Sobre from "./Pages/Sobre/Sobre";
 import { Detalhes } from "./Pages/Detalhes/Detalhes";
 import Financiar from "./Pages/Financiar/Financiar";
+import { RequestPasswordReset } from "./Pages/RequestPassword/RequestPassword";
+import { ResetPassword } from "./Pages/resetPassword/resetPassword";
 
 const App: React.FC = () => {
   return (
@@ -28,6 +30,9 @@ const App: React.FC = () => {
           {/* Rotas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/cadastrarUser" element={<CadastrarUser />} />
+          <Route path="/request-passowrd" element={<RequestPasswordReset />} />
+          <Route path="/reset-passowrd" element={<ResetPassword />} />
+
           
 
           {/* Layout e Navbar aparecem apenas nas rotas abaixo */}

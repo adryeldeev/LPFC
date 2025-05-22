@@ -33,6 +33,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import Redes from "../../Components/Redes/Redes";
+import CarrosSemelhantes from "../../Components/Semelhantes/Semelhantes";
 
 interface Marca {
   id: number;
@@ -54,6 +55,7 @@ interface Carro {
   ano: number;
   cambio: string;
   combustivel: string;
+  descricao: string;
   portas: number;
   quilometragem: number;
   imagens: Imagem[];
@@ -179,6 +181,8 @@ export const Detalhes = () => {
                 </div>
               ))}
             </div>
+            <span>Descrição</span>
+            <p>{carro.descricao}</p>
           </BoxFichaTecnica>
         </InfoCarro>
 
@@ -197,6 +201,10 @@ export const Detalhes = () => {
           </BotaoWhatsappContainer>
         )}
       </DetalhesContainer>
+      <CarrosSemelhantes
+        marca={carro.marca.nome}
+        carroIdAtual={String(carro.id)}
+      />
         <Redes/>
       <Mapa />
 

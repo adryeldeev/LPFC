@@ -166,7 +166,29 @@ export const BoxFichaTecnica = styled.div`
       grid-template-columns: 1fr; /* 1 coluna em telas muito pequenas */
     }
   }
+    span{
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 23px;
+    padding: 3px 6px;
+    @media (max-width: 768px) {
+      font-size: 20px;
+      margin-top: 16px;
 
+
+    }
+  p{
+    margin: 0;
+    font-size: 16px;
+    color: #011;
+    font-weight: 500;
+    margin-top: 4px;
+    padding: 4px 8px;
+    @media (max-width: 768px) {
+      font-size: 14px;
+      margin-top: 2px;
+    }
   .item {
     display: flex;
     align-items: center;
