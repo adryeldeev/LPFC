@@ -24,6 +24,7 @@ import {
   TbChevronsRight
 } from 'react-icons/tb';
 import Mapa from '../../Components/Mapa/Mapa';
+import Redes from '../../Components/Redes/Redes';
 
 const Estoque: React.FC = () => {
   const [veiculos, setVeiculos] = useState<any[]>([]);
@@ -112,6 +113,7 @@ const Estoque: React.FC = () => {
         <button onClick={irParaUltima} disabled={paginaAtual === totalPaginas}><TbChevronsRight /></button>
       </Paginacao>
     </EstoqueContainer>
+    <Redes/>
     <Mapa/>
     </>
   );

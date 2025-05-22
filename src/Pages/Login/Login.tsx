@@ -15,9 +15,10 @@ import {
 } from "./LoginStyled";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
-import Logo from '../../assets/Logo.webp'; // Ajuste o caminho se necessário
+import Logo from '../../assets/Logo2.png'; // Ajuste o caminho se necessário
 import { useAuth } from "../../Context/AuthProvider";
 import { NavLink } from "react-router-dom";
+import Button from "../../Components/Button/Button";
 
 // Tipagem para o estado de input
 interface LoginInput {
@@ -75,7 +76,7 @@ const Login: React.FC = () => {
               onChange={handleInputChange}
             />
           </DivInputsLogin>
-          <ButtonLogin type="submit">Entrar</ButtonLogin>
+       <Button text="Login" type="submit" />
         </FormLogin>
         {error && <p style={{ color: "red" }}>{error}</p>} {/* Exibe o erro */}
         <DivLinks>

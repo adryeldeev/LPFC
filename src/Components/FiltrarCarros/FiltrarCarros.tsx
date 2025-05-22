@@ -14,6 +14,7 @@ import {
   FiltroHeader,
   Div
 } from './FiltrarCarrosStyled';
+import { IoSearchOutline } from "react-icons/io5";
 
 const FiltroVeiculos: React.FC = () => {
   const [marcas, setMarcas] = useState<any[]>([]);
@@ -42,34 +43,33 @@ const FiltroVeiculos: React.FC = () => {
   };
 
   return (
-   <FiltroContainer>
-  <FiltroHeader>
-    <Div>
+    <FiltroContainer>
+      <FiltroHeader>
+        <Div>
+          <h2>Qual veículo você está buscando?</h2>
+          <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
+        </Div>
+        <DivInput onSubmit={e => { e.preventDefault(); handleBuscarNome(); }}>
+          <InputPesquisa
+            placeholder="Marca ou modelo"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+          <BotaoPesquisar type="submit" aria-label="Pesquisar">
+            <IoSearchOutline size={18} />
+          </BotaoPesquisar>
+        </DivInput>
+      </FiltroHeader>
 
-    <h2>Qual veículo você está buscando?</h2>
-      <BotaoEstoque onClick={handleVerEstoque}>Ver todo estoque</BotaoEstoque>
-    </Div>
-    <DivInput onSubmit={e => { e.preventDefault(); handleBuscarNome(); }}>
-      <InputPesquisa
-        placeholder="Marca ou modelo"
-        value={busca}
-        onChange={(e) => setBusca(e.target.value)}
-      />
-      <BotaoPesquisar type="submit" aria-label="Pesquisar">
-        🔍
-      </BotaoPesquisar>
-    </DivInput>
-  </FiltroHeader>
-
-  <ListaMarcas>
-    {marcas.map((marca) => (
-      <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
-        <MarcaImg src={`http://localhost:8000${marca.logo}`} alt={marca.nome} />
-        <MarcaNome>{marca.nome}</MarcaNome>
-      </MarcaItem>
-    ))}
-  </ListaMarcas>
-</FiltroContainer>
+      <ListaMarcas>
+        {marcas.map((marca) => (
+          <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
+            <MarcaImg src={`http://localhost:8000${marca.logo}`} alt={marca.nome} />
+            <MarcaNome>{marca.nome}</MarcaNome>
+          </MarcaItem>
+        ))}
+      </ListaMarcas>
+    </FiltroContainer>
   );
 };
 

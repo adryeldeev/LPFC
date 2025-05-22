@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../Components/Navbar/Navbar";
 import { Main } from "./LayoutStyled";
+import Footer from "../Components/Footer/Footer";
+import WhatsAppButton from "../Components/ButtonWhatsapp/ButtonWhatsapp";
 
 export function Layout() {
   return (
@@ -9,6 +11,8 @@ export function Layout() {
       <Main>
         <Outlet />
       </Main>
+        <WhatsAppButton/>
+      <Footer />
     </div>
   );
 }

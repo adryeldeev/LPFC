@@ -6,6 +6,10 @@ export const ContentSobre = styled.div`
     width: 100%;
     height: 100%;
     background-color: #f0f0f0;
+    padding: 20px 90px;
+    @media (max-width: 768px) {
+        padding: 20px 20px;
+    }
     `;
     
     export const SobreTextDiv = styled.div`
@@ -16,6 +20,9 @@ export const ContentSobre = styled.div`
     width: 100%;
     heigth:50vh;
     background-color: #f0f0f0;
+    @media (max-width: 768px) {
+        padding: 20px 20px;
+    }
     `;
     
     export const SobreTitulo= styled.h2`
@@ -23,6 +30,9 @@ export const ContentSobre = styled.div`
     font-weight: bold;
     margin-bottom: 10px;    
     color: #333;
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+    }
     `
    export const SobreText = styled.p<{ isExpanded: boolean }>`
   font-size: 1.2rem;
@@ -39,6 +49,7 @@ export const ContentSobre = styled.div`
 `;
 export const VerMaisButton = styled.button`
   margin-top: 10px;
+
   background: none;
   border: none;
   color: #007bff;
@@ -46,6 +57,9 @@ export const VerMaisButton = styled.button`
   font-size: 1rem;
   &:hover {
     text-decoration: underline;
+  }
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
   }
 `;
 export const DivContato = styled.div`
@@ -56,6 +70,9 @@ export const DivContato = styled.div`
   width: 100%;
   heigth:50vh;
   background-color: #f0f0f0;
+  @media (max-width: 768px) {
+    padding: 20px 20px;
+  }
 `;
 export const DivInfoContato = styled.div`
   display: flex;
@@ -65,6 +82,9 @@ export const DivInfoContato = styled.div`
   width: 100%;
   heigth:50vh;
   background-color: #f0f0f0;
+  @media (max-width: 768px) {
+    padding: 20px 20px;
+  }
 `;
 export const BotaoWhatsApp = styled.a`
   display: flex;
@@ -76,8 +96,15 @@ export const BotaoWhatsApp = styled.a`
   text-decoration: none;
   font-size: 1rem;
   cursor: pointer;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+  width: 200px;
   &:hover {
     background-color: #128c7e;
+  }
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
   }
 `;
 export const MapaContainer = styled.div`

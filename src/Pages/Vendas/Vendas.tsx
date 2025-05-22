@@ -1,5 +1,6 @@
 import { FormPropostaVenda } from "../../Components/Form/Form";
 import Mapa from "../../Components/Mapa/Mapa";
+import Redes from "../../Components/Redes/Redes";
 import { ContentVenda, Container, LeftSide, RightSide, Step, StepText, StepTitle, IconWrapper,ContentText,ContentOpcoes,CardProcesso } from "./VendasStyled";
 import { FaComments, FaClipboardList, FaHandshake } from "react-icons/fa"; // Ícones equivalentes
 
@@ -28,7 +29,8 @@ export default function Venda() {
   ]
   return (
   <ContentVenda>
-
+    <h2>Quer vender seu veículo?</h2>
+    <p>Solicite a avaliação agora!</p>
     <Container>
       <LeftSide>
         <FormPropostaVenda />
@@ -68,6 +70,7 @@ export default function Venda() {
         
       </ContentText>
     </ContentOpcoes>
+    <Redes/>
     <Mapa />
   </ContentVenda>
   );

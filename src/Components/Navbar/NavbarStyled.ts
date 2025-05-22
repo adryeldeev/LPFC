@@ -180,8 +180,8 @@ export const DropdownContent = styled.div`
     }
 `;
     export const Logo = styled.img`
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         margin-right: 20px;
         border-radius: 15%;
         @media (max-width: 768px) {

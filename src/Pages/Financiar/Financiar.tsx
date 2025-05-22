@@ -7,6 +7,7 @@ import santander from '../../assets/bancos/santander_2x.webp'
 import banco_pan from '../../assets/bancos/banco-pan_2x.webp'
 import FormFinanciamento from '../../Components/FormFinan/FormFinan'
 import Mapa from '../../Components/Mapa/Mapa'
+import Redes from '../../Components/Redes/Redes'
 
 
 
@@ -18,7 +19,7 @@ const Financiar = () => {
     <h2>Financiar</h2>
     <ContentText>
         <TextFinanciar>
-            <span>Faça o financiamento de veículo particular aqui com a gente. A Felipe Carneiro Conceito tem parceria com as principais financiadoras do mercado.</span>
+            <span>Faça o financiamento de veículo particular aqui com a gente. A Felipe Carneiro Motors tem parceria com as principais financiadoras do mercado.</span>
             <DivBancos>
             ''<DivInfoBanco>
                 <img src={BV} alt="Banco BV" />
@@ -50,6 +51,7 @@ const Financiar = () => {
         </TextContato>
     </ContentText>
     <FormFinanciamento/>
+    <Redes/>
     <Mapa/>
    </ContentFinanciar>
   )

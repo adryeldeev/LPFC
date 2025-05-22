@@ -79,9 +79,9 @@ export const FormFinanciamento = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { nome, veiculo, telefone, email, whatsapp } = formData;
+    const { nome, veiculo, telefone, email } = formData;
 
-    if (!nome || !telefone || !email || !veiculo || !whatsapp ) {
+    if (!nome || !telefone || !email || !veiculo  ) {
       setError("Preencha todos os dados");
       return;
     }

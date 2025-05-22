@@ -107,29 +107,28 @@ export const InputLogin = styled.input`
 `;
 
 export const ButtonLogin = styled.button`
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 20px;
-  background-color: #f5b301; /* amarelo escuro, levemente queimado */
+ display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e30613;
   color: #fff;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
   font-weight: bold;
-  border-radius: 4px;
- 
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
-  transition: background 0.3s;
+  font-size: 16px;
+  gap: 8px;
+  transition: background-color 0.3s ease;
 
   &:hover {
-     background-color: #d99e02; /* amarelo mais escuro */
-     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+    background-color: #c90010;
   }
-     &:active {
-     background-color: #c68f01; /* amarelo ainda mais escuro */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra reduzida ao clicar */
-  }
-`;
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  } 
+    `; 
 
 export const LinkPassword = styled.a`
   margin-top: 20px;

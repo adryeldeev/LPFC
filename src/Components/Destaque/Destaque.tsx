@@ -32,7 +32,7 @@ const Destaque: React.FC = () => {
  
   return (
     <ContentDestaque>
-  <h1>Destaque de Carros</h1>
+  <h1>Destaques</h1>
   <ListaDestaque>
     {carros.map((carro) => (
       <ItemDestaque key={carro.id}>
