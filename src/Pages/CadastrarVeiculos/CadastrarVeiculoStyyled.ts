@@ -84,6 +84,23 @@ export const InputCadastrarVeiculos = styled.input`
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+  @media (max-width: 768px) {
+    padding: 8px; /* Reduz o padding em telas menores */
+    font-size: 14px; /* Tamanho da fonte em telas menores */
+  }
+`;
+export const InputUpload = styled.input`
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    font-size: 14px;
+    width: 100%; // ocupa toda a largura em telas pequenas
+  }
 `;
 
 export const IconWrapper = styled.div`

@@ -3,12 +3,25 @@ import styled from "styled-components";
 
 export const ContentListaMarcas = styled.div`
   padding: 2rem;
+  @media (max-width: 768px) {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
 `;
 
 export const Div = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 export const Button = styled.button`
@@ -18,6 +31,10 @@ export const Button = styled.button`
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
 `;
 
 export const ListaMarcaContainer = styled.div`
@@ -25,6 +42,12 @@ export const ListaMarcaContainer = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 2rem;
+  justify-content: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 export const CardMarca = styled.div`
@@ -52,6 +75,16 @@ export const CardMarca = styled.div`
   h3 {
     font-size: 1.1rem;
     margin: 0;
+  }
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -83,6 +116,11 @@ export const CardActions = styled.div`
       color: black;
     }
   }
+    @media (max-width: 768px) {
+    bottom: -30px;
+    padding: 0.2rem 0.5rem;
+    font-size: 12px;
+  }
 `;
 
 export const ModalBackground = styled.div<{ open: boolean }>`
@@ -96,10 +134,25 @@ export const ModalBackground = styled.div<{ open: boolean }>`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  @media (max-width: 768px) {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
 `;
 
 export const ModalContent = styled.div`
   background: white;
   padding: 2rem;
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1rem;
+  }
 `;

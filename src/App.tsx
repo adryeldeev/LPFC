@@ -30,7 +30,7 @@ const App: React.FC = () => {
           {/* Rotas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/cadastrarUser" element={<CadastrarUser />} />
-          <Route path="/request-passowrd" element={<RequestPasswordReset />} />
+          <Route path="/forgot-password" element={<RequestPasswordReset />} />
           <Route path="/reset-passowrd" element={<ResetPassword />} />
 
           

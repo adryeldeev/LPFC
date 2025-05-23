@@ -51,9 +51,9 @@ export const NavList = styled.ul`
     margin: 0;
     gap: 20px;
     @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: flex-start;
-        display: none; /* Esconde o menu em telas menores */
+      flex-direction: column;
+      align-items: flex-start;
+      display: none; /* Esconde o menu em telas menores */
         }
         `
 export const NavItem = styled.li`
@@ -121,7 +121,6 @@ export const DropdownContent = styled.div`
   position: absolute;
   background-color: #fff;
   min-width: 160px;
-  padding-right:120px;
   z-index: 1000;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   border-radius: 8px;

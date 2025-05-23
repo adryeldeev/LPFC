@@ -27,6 +27,12 @@ export const DivInputsCadastrarVendedor = styled.div`
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+    @media (max-width: 768px) {
+    flex-direction: column; /* Alinha os campos verticalmente */
+    gap: 10px; /* Espaçamento entre os campos */
+    width: 100%; /* Largura total em telas menores */
+    padding: 10px; /* Reduz o padding em telas menores */
+  }
 `;
 export const FormCadastrarVendedor = styled.form`
 margin-top: 20px; /* Espaçamento superior do formulário */
@@ -51,6 +57,10 @@ export const IconWrapper = styled.div`
  font-size: 20px;
   color: #007bff;
   margin-right: 10px;
+  @media (max-width: 768px) {
+    font-size: 16px; /* Tamanho do ícone em telas menores */
+    margin-right: 5px; /* Espaçamento reduzido em telas menores */
+  }
 `
 export const InputCadastrarVendedor = styled.input`
     flex: 1; /* Permite que o input ocupe o espaço restante */
@@ -63,6 +73,11 @@ export const InputCadastrarVendedor = styled.input`
     &:focus {
         border-color: #007bff; /* Cor do contorno ao focar */
         outline: none; /* Remove o contorno padrão */
+    }
+        @media (max-width: 768px) {
+    padding: 8px; /* Reduz o padding em telas menores */
+    font-size: 14px; /* Tamanho da fonte em telas menores */
+    width: 100%; /* Largura total em telas menores */
     }
     `;
 export const ButtonCadastrarVendedor = styled.button`
@@ -77,5 +92,9 @@ export const ButtonCadastrarVendedor = styled.button`
     
     &:hover {
         background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+    }
+        @media (max-width: 768px) {
+    padding: 8px 16px; /* Reduz o padding em telas menores */
+    font-size: 14px; /* Tamanho da fonte em telas menores */
     }
     `;

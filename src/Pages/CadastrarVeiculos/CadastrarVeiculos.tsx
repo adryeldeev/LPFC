@@ -24,6 +24,7 @@ import {
   InputCadastrarVeiculos,
   TitleCadastrarVeiculos,
   SelectCadastrarVeiculos,
+  InputUpload,
 } from "./CadastrarVeiculoStyyled";
 import Switch from "react-switch";
 import useApi from "../../Api/Api";
@@ -200,7 +201,7 @@ const CadastrarVeiculos: React.FC = () => {
             <IconWrapper>
               <TbPhoto />
             </IconWrapper>
-            <InputCadastrarVeiculos
+            <InputUpload
               type="file"
               id="imagens"
               multiple
