@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   ListaCarrosContainer,
   CarroCard,
-  CarroImagem,
+
   CarroInfo,
   PaginacaoContainer,
   BotaoPaginacao,
@@ -17,11 +17,17 @@ import {
 } from "./CarrosStyled";
 
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import Slider from "react-slick";
 import useApi from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+import { Navigation, Pagination } from 'swiper/modules';
+
 
 
 
@@ -242,14 +248,7 @@ const Carros: React.FC = () => {
     navigate("/cadastrarVeiculo");
   };
 
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-  };
+ 
 
   return (
     <CarrosContainer>
@@ -261,21 +260,34 @@ const Carros: React.FC = () => {
         {carrosPagina.map((carro) => (
           <CarroCard key={carro.id}>
             <CarroSliderWrapper>
-              <Slider {...sliderSettings}>
-               {carro.imagens && carro.imagens.length > 0 ? (
-  carro.imagens.map((imagem) => (
-    <img
-      key={imagem.id}
-      src={`${baseUrl}/uploads/carros/${imagem.url}`}
-      alt={carro.modelo}
-      style={{ width: 120, height: 80, objectFit: "cover" }}
-    />
-  ))
-) : (
-  <img src="/imagem-nao-disponivel.png" alt="Sem imagem" />
-)}
-              </Slider>
-            </CarroSliderWrapper>
+  <Swiper
+    modules={[Navigation, Pagination]}
+    navigation
+    pagination={{ clickable: true }}
+    spaceBetween={10}
+    slidesPerView={1}
+  >
+    {carro.imagens && carro.imagens.length > 0 ? (
+      carro.imagens.map((imagem) => (
+        <SwiperSlide key={imagem.id}>
+          <img
+            src={`${baseUrl}/uploads/carros/${imagem.url}`}
+            alt={carro.modelo}
+            style={{ width: 120, height: 80, objectFit: "cover" }}
+          />
+        </SwiperSlide>
+      ))
+    ) : (
+      <SwiperSlide>
+        <img
+          src="/imagem-nao-disponivel.png"
+          alt="Sem imagem"
+          style={{ width: 120, height: 80, objectFit: "cover" }}
+        />
+      </SwiperSlide>
+    )}
+  </Swiper>
+</CarroSliderWrapper>
 
             <CarroInfo>
               <h3>{carro.modelo}</h3>

@@ -77,6 +77,9 @@ export const CarroCard = styled.div`
     bottom: 10px;
     opacity: 1;
   }
+
+
+
   img {
     width: 100%;
     height: auto;
@@ -90,6 +93,9 @@ export const CarroCard = styled.div`
     font-size: 1rem;
     margin: 0;
   }
+
+
+  
     @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -347,6 +353,29 @@ export const ModalContent = styled.div`
     font-size: 16px;
     color: #666;
   }
+    div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    input{
+    
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      color: #333;
+      &:focus {
+        outline: none;
+        border-color: #0011;
+      }
+
+    }
+  }
+    
   @media (max-width: 768px) {
     padding: 10px;
     width: 100%;

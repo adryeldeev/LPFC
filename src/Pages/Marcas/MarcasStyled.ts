@@ -136,7 +136,7 @@ export const ModalBackground = styled.div<{ open: boolean }>`
   z-index: 1000;
   @media (max-width: 768px) {
     padding: 1rem;
-    display: flex;
+display: ${({ open }) => (open ? "flex" : "none")};
     flex-direction: column;
     align-items: center;
     justify-content: center;

@@ -141,42 +141,36 @@ export const DropdownContent = styled.div`
 `;
     
  export const DropdownMenu = styled.div`
-    position: absolute;
-    top: 80px;
-    right: 0;
-    background-color: #000;
-    color: white;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    width: 200px;
-    height: auto;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 3;
+  position: fixed; /* Mudança importante */
+  top: 60px; /* altura logo abaixo da navbar */
+  right: 30px;
+  left: 30px;
+  background-color: #000;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: calc(100vw - 60px);
+  max-width: 400px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 3;
 
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-    li {
-        margin: 5px 0;
-    }
+  li {
+    margin: 5px 0;
+  }
 
-    @media (max-width: 768px) {
-        right: 30px; // Afasta da lateral
-        left: 30px;  // Opcional: deixa centralizado se quiser
-        width: calc(100vw - 40px); // Garante que não ultrapasse a tela
-        max-width:400px; // Limite máximo para não ficar muito largo
-    }
-
-    @media (min-width: 769px) {
-        display: none; /* Esconde o menu dropdown em telas maiores */
-    }
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
     export const Logo = styled.img`
         width: 70px;
