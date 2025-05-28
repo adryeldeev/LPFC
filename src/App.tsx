@@ -8,7 +8,7 @@ import Sobre from "./Pages/Sobre/Sobre";
 import Financiar from "./Pages/Financiar/Financiar";
 
 import { Detalhes } from "./Pages/Detalhes/Detalhes";
-import Venda from "./Pages/Vendas/Vendas";
+import Venda from "./Pages/Vendas/Vendas"
 
 
 
