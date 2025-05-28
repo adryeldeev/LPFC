@@ -13,14 +13,16 @@ const Destaque: React.FC = () => {
       const response = await api.get('/destaques');
       
       const data = response.data;
-      console.log('Dados do destaque : ', data);
       const carrosDestaque = data.slice(0, 3); // Limita os carros a no máximo 3
       setCarros(carrosDestaque);
-    } catch (error) {
-      console.error('Erro ao buscar os destaques:', error.message);
-    }
+    }  catch (error) {
+  if (error instanceof Error) {
+    console.error('Erro ao buscar os destaques:', error.message);
+  } else {
+    console.error('Erro desconhecido:', error);
+  }
   };
-
+  }
   useEffect(() => {
     fetchDestaques();
   }, []);
