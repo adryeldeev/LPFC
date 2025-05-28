@@ -9,6 +9,7 @@ import Financiar from "./Pages/Financiar/Financiar";
 
 import { Detalhes } from "./Pages/Detalhes/Detalhes";
 import Venda from "./Pages/Vendas/Vendas"
+import AuthProvider from "./Context/AuthProvider";
 
 
 
@@ -25,6 +26,9 @@ import Venda from "./Pages/Vendas/Vendas"
 const App: React.FC = () => {
   return (
     <Router>
+
+    <AuthProvider>
+
      
         <Routes>
    
@@ -41,6 +45,7 @@ const App: React.FC = () => {
 
         </Routes>
      
+    </AuthProvider>
     </Router>
   );
 };
