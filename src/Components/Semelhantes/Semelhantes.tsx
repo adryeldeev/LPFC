@@ -26,7 +26,7 @@ const CarrosSemelhantes: React.FC<Props> = ({ marca, carroIdAtual }) => {
   const api = useApi();
   const [semelhantes, setSemelhantes] = useState<Carro[]>([]);
   const navigate = useNavigate();
-  const baseUrl = "https://my-first-project-repo-production.up.railway.app  ";
+  const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
   useEffect(() => {
     const fetchSemelhantes = async () => {
