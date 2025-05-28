@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import { useAuth } from "../../src/Context/AuthProvider";
+
+import { useAuth } from "../Context/AuthProvider";
+
 
 
 

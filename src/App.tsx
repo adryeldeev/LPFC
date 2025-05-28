@@ -7,8 +7,15 @@ import Home from "./Pages/Home/Home";
 import Estoque from "./Pages/Estoque/Estoque";
 import Sobre from "./Pages/Sobre/Sobre";
 import Financiar from "./Pages/Financiar/Financiar";
+
 import { Detalhes } from "./Pages/Detalhes/Detalhes";
 import Venda from "./Pages/Vendas/Vendas";
+
+
+
+
+
+
 
 
 
@@ -23,8 +30,6 @@ const App: React.FC = () => {
         <Routes>
    
 
-   
-          
           {/* Layout público - Navbar pública */}
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
@@ -35,7 +40,6 @@ const App: React.FC = () => {
             <Route path="/venda-seu-carro" element={<Venda />} />
           </Route>
 
-        
         </Routes>
       </AuthProvider>
     </Router>
