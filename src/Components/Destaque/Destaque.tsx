@@ -21,7 +21,7 @@ const Destaque: React.FC = () => {
   } else {
     console.error('Erro desconhecido:', error);
   }
-  };
+  }
   }
   useEffect(() => {
     fetchDestaques();

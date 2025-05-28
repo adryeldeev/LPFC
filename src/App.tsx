@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AuthProvider from "./Context/AuthProvider";
 import { Layout } from "./Layout/Layout";
 import Home from "./Pages/Home/Home";
 import Estoque from "./Pages/Estoque/Estoque";
@@ -26,7 +25,7 @@ import Venda from "./Pages/Vendas/Vendas";
 const App: React.FC = () => {
   return (
     <Router>
-      <AuthProvider>
+     
         <Routes>
    
 
@@ -41,7 +40,7 @@ const App: React.FC = () => {
           </Route>
 
         </Routes>
-      </AuthProvider>
+     
     </Router>
   );
 };
