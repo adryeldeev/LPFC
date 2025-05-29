@@ -13,12 +13,17 @@ export const GaleriaContainer = styled.div`
 `;
 
 export const Principal = styled.div`
-  width: 50%;
+   width: 100%;
+  max-width: 600px;
+  height: 350px; /* Altura fixa */
+  overflow: hidden;
+  border-radius: 12px;
+
   img {
     width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
+    height: 100%;
+    object-fit: cover; /* Preenche mantendo proporção e cortando o excesso */
+    display: block;
   }
 `;
 

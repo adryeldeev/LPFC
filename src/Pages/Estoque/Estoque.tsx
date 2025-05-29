@@ -32,7 +32,7 @@ import { IoSearchOutline } from 'react-icons/io5';
 const Estoque: React.FC = () => {
   const [veiculos, setVeiculos] = useState<any[]>([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const itensPorPagina = 6;
+  const itensPorPagina = 8;
   const [searchParams] = useSearchParams();
   const [filtro, setFiltro] = useState('');
   const api = useApi();
