@@ -28,19 +28,22 @@ const CarrosSemelhantes: React.FC<Props> = ({ marca, carroIdAtual }) => {
   const navigate = useNavigate();
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
-  useEffect(() => {
-    const fetchSemelhantes = async () => {
-      try {
-        const res = await api.get(`/carros-all?marca=${marca}`);
-        const filtrados = res.data.filter((carro: Carro) => carro.id !== carroIdAtual);
-        setSemelhantes(filtrados);
-      } catch (err) {
-        console.error("Erro ao buscar carros semelhantes", err);
-      }
-    };
+ useEffect(() => {
+  const fetchSemelhantes = async () => {
+    try {
+      const res = await api.get(`/carros-all?marca=${marca}`);
+      // Garante que só carros da mesma marca aparecem
+      const filtrados = res.data
+        .filter((carro: Carro) => carro.id !== carroIdAtual)
+       .filter((carro: Carro) => carro.marca === marca)
+      setSemelhantes(filtrados);
+    } catch (err) {
+      console.error("Erro ao buscar carros semelhantes", err);
+    }
+  };
 
-    if (marca) fetchSemelhantes();
-  }, [marca, carroIdAtual]);
+  if (marca) fetchSemelhantes();
+}, [marca, carroIdAtual]);
 
   if (semelhantes.length === 0) return null;
 
