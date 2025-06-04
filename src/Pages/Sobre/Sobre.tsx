@@ -23,7 +23,7 @@ const Sobre: React.FC = () => {
     };
   }, []);
   const mensagemWhats = "Olá, Felipe! Estou interessado em saber mais sobre os veículos disponíveis. Poderia me ajudar?";
-  const telefoneFormatado = "55987733712";
+  const telefoneFormatado = "+5585987733712";
 
   return (
     <ContentSobre id="sobre">

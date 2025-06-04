@@ -25,7 +25,7 @@ const Button = styled.a`
 `;
 
 const WhatsAppButton: React.FC = () => {
-  const phoneNumber = "55987733712"; // Substitua pelo número correto com DDI (ex: 55 para Brasil)
+  const phoneNumber = "+5585987733712"; // Substitua pelo número correto com DDI (ex: 55 para Brasil)
 
   return (
     <Button

@@ -11,7 +11,10 @@ interface Imagem {
 interface Carro {
   id: string;
   modelo: string;
-  marca: string;
+  marca: {
+    id: number;
+    nome: string;
+  };
   ano: number;
   preco: number;
   imagens: Imagem[];
@@ -34,8 +37,9 @@ const CarrosSemelhantes: React.FC<Props> = ({ marca, carroIdAtual }) => {
       const res = await api.get(`/carros-all?marca=${marca}`);
       // Garante que só carros da mesma marca aparecem
       const filtrados = res.data
+      
         .filter((carro: Carro) => carro.id !== carroIdAtual)
-       .filter((carro: Carro) => carro.marca === marca)
+       .filter((carro: Carro) => carro.marca.nome === marca)
       setSemelhantes(filtrados);
     } catch (err) {
       console.error("Erro ao buscar carros semelhantes", err);
