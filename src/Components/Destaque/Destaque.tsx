@@ -9,20 +9,31 @@ const Destaque: React.FC = () => {
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
   const fetchDestaques = async () => {
-    try {
-      const response = await api.get('/destaques');
-      
-      const data = response.data;
-      const carrosDestaque = data.slice(0, 3); // Limita os carros a no máximo 3
-      setCarros(carrosDestaque);
-    }  catch (error) {
-  if (error instanceof Error) {
-    console.error('Erro ao buscar os destaques:', error.message);
-  } else {
-    console.error('Erro desconhecido:', error);
+  try {
+    const response = await api.get('/destaques');
+    const data = response.data;
+
+    const carrosDestaque = data.slice(0, 3).map((carro: any) => {
+      const imagensOrdenadas = [...carro.imagens].sort((a, b) => {
+        if (a.principal === b.principal) return 0;
+        return a.principal ? -1 : 1;
+      });
+
+      return {
+        ...carro,
+        imagens: imagensOrdenadas
+      };
+    });
+
+    setCarros(carrosDestaque);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Erro ao buscar os destaques:', error.message);
+    } else {
+      console.error('Erro desconhecido:', error);
+    }
   }
-  }
-  }
+};
   useEffect(() => {
     fetchDestaques();
   }, []);

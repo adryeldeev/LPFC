@@ -44,6 +44,7 @@ interface Marca {
 interface Imagem {
   id: number;
   url: string;
+  principal: boolean;
 }
 
 interface Carro {
@@ -59,6 +60,7 @@ interface Carro {
   portas: number;
   quilometragem: number;
   imagens: Imagem[];
+
 }
 
 interface Vendedor {
@@ -80,13 +82,27 @@ export const Detalhes = () => {
     const fetchData = async () => {
       try {
         const carroRes = await api.get(`/carro/${id}`);
-        if (carroRes.status === 200) {
-          const data = carroRes.data as Carro;
-          setCarro(data);
-          if (data.imagens.length > 0) {
-            setImagemPrincipal(data.imagens[0].url);
-          }
-        }
+       if (carroRes.status === 200) {
+  const data = carroRes.data as Carro;
+
+  // Ordena as imagens para colocar a principal primeiro
+  const imagensOrdenadas = [...data.imagens].sort((a, b) => {
+    if (a.principal === b.principal) return 0;
+    return a.principal ? -1 : 1;
+  });
+
+  // Atualiza o objeto data com as imagens ordenadas
+  const carroOrdenado = {
+    ...data,
+    imagens: imagensOrdenadas,
+  };
+
+  setCarro(carroOrdenado);
+
+  if (imagensOrdenadas.length > 0) {
+    setImagemPrincipal(imagensOrdenadas[0].url);
+  }
+}
 
         const vendedoresRes = await api.get("/vendedores-all");
         if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
