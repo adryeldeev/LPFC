@@ -6,6 +6,7 @@ import useApi from "../../Api/Api";
 interface Imagem {
   id: number;
   url: string;
+  principal: boolean;
 }
 
 interface Carro {
@@ -35,11 +36,19 @@ const CarrosSemelhantes: React.FC<Props> = ({ marca, carroIdAtual }) => {
   const fetchSemelhantes = async () => {
     try {
       const res = await api.get(`/carros-all?marca=${marca}`);
-      // Garante que só carros da mesma marca aparecem
-      const filtrados = res.data
       
+      const filtrados = res.data
         .filter((carro: Carro) => carro.id !== carroIdAtual)
-       .filter((carro: Carro) => carro.marca.nome === marca)
+        .filter((carro: Carro) => carro.marca.nome === marca)
+        .map((carro: Carro) => {
+          const imagensOrdenadas = [...carro.imagens].sort((a, b) => {
+            if (a.principal === b.principal) return 0;
+            return a.principal ? -1 : 1;
+          });
+
+          return { ...carro, imagens: imagensOrdenadas };
+        });
+
       setSemelhantes(filtrados);
     } catch (err) {
       console.error("Erro ao buscar carros semelhantes", err);
