@@ -99,17 +99,18 @@ const veiculosPagina = veiculosFiltrados.slice(inicio, fim)
   </BotaoPesquisar>
 </SearchContainer>
       <ListaVeiculos>
-  {veiculosPagina.length > 0 ? (
-    veiculosPagina.map((veiculo) => (
-      <CardVeiculo key={veiculo.id}>
-        <ImagemVeiculo
-          src={
-            veiculo.imagens?.length > 0
-              ? `${baseUrl}/uploads/carros/${veiculo.imagens[0].url}`
-              : '/imagem-nao-disponivel.png'
-          }
-          alt={veiculo.modelo}
-        />
+{veiculosPagina.map((veiculo) => {
+  const imagensOrdenadas = [...veiculo.imagens].sort((a, b) => {
+    if (a.principal === b.principal) return 0;
+    return a.principal ? -1 : 1;
+  });
+
+  return (
+    <CardVeiculo key={veiculo.id}>
+      <ImagemVeiculo
+        src={`${baseUrl}/uploads/carros/${imagensOrdenadas[0]?.url}`}
+        alt={veiculo.modelo}
+      />
         <img src={`${baseUrl}${veiculo.marca.logo}`} alt={veiculo.marca.nome} />
         <NomeVeiculo>{veiculo.modelo}</NomeVeiculo>
         <Detalhes>
@@ -121,12 +122,14 @@ const veiculosPagina = veiculosFiltrados.slice(inicio, fim)
           <Button as={Link} to={`/detalhes/${veiculo.id}`}>Mais detalhes</Button>
         </Detalhes>
       </CardVeiculo>
-    ))
+  );
+})}
+  
   ) : (
     <p style={{ marginTop: '2rem', fontSize: '1.2rem' }}>
       Indisponível no momento, em breve disponível.
     </p>
-  )}
+  )
 </ListaVeiculos>
 
       <Paginacao>
