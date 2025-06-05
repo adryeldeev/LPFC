@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import ImgFundo2 from "../../assets/Title.png"; // Importa aqui para usar no styled
+import ImgFundo2 from "../../assets/Title2.png"; // Importa aqui para usar no styled
 
 export const HeaderContainer = styled.header`
   display: flex;
