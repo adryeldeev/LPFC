@@ -30,12 +30,12 @@ const FiltroVeiculos: React.FC = () => {
     fetchMarcas();
   }, []);
 
-  const handleFiltrarMarca = (marcaId: string) => {
-    navigate(`/estoque?marca=${marcaId}`);
+  const handleFiltrarMarca = (marcaNome: string) => {
+    navigate(`/estoque?marca=${encodeURIComponent(marcaNome.toLowerCase())}`);
   };
 
   const handleBuscarNome = () => {
-    navigate(`/estoque?nome=${busca}`);
+    navigate(`/estoque?nome=${encodeURIComponent(busca.trim().toLowerCase())}`);
   };
 
   const handleVerEstoque = () => {
@@ -63,8 +63,11 @@ const FiltroVeiculos: React.FC = () => {
 
       <ListaMarcas>
         {marcas.map((marca) => (
-          <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.id)}>
-            <MarcaImg src={`https://my-first-project-repo-production.up.railway.app${marca.logo}`} alt={marca.nome} />
+          <MarcaItem key={marca.id} onClick={() => handleFiltrarMarca(marca.nome)}>
+            <MarcaImg
+              src={`https://my-first-project-repo-production.up.railway.app${marca.logo}`}
+              alt={marca.nome}
+            />
             <MarcaNome>{marca.nome}</MarcaNome>
           </MarcaItem>
         ))}
