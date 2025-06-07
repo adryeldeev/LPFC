@@ -105,33 +105,7 @@ export const Detalhes = () => {
         }
       }
 
-      // --- Sorteio com controle de repetição ---
-      const vendedoresRes = await api.get("/vendedores-all");
-      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-        const vendedores = vendedoresRes.data as Vendedor[];
-
-        // Filtra os disponíveis (que não estão no histórico)
-        const disponiveis = vendedores.filter(
-          (v) => !vendedoresRecentesRef.current.has(v.id)
-        );
-
-        // Se todos foram sorteados recentemente, limpa o histórico
-        if (disponiveis.length === 0) {
-          vendedoresRecentesRef.current.clear();
-          disponiveis.push(...vendedores);
-        }
-
-        // Sorteia um aleatório dos disponíveis
-        const aleatorio =
-          disponiveis[Math.floor(Math.random() * disponiveis.length)];
-        setVendedorSorteado(aleatorio);
-
-        // Adiciona ao histórico e agenda liberação após o tempo definido
-        vendedoresRecentesRef.current.add(aleatorio.id);
-        setTimeout(() => {
-          vendedoresRecentesRef.current.delete(aleatorio.id);
-        }, TEMPO_LIBERACAO);
-      }
+      
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
       toast.error("Erro ao carregar dados. Tente novamente.");
@@ -140,7 +114,41 @@ export const Detalhes = () => {
 
   fetchData();
 }, [id]);
+const sortearVendedor = async () => {
+  try {
+    const vendedoresRes = await api.get("/vendedores-all");
+    if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+      const vendedores = vendedoresRes.data as Vendedor[];
 
+      // Filtra os disponíveis
+      const disponiveis = vendedores.filter(
+        (v) => !vendedoresRecentesRef.current.has(v.id)
+      );
+
+      if (disponiveis.length === 0) {
+        vendedoresRecentesRef.current.clear();
+        disponiveis.push(...vendedores);
+      }
+
+      const aleatorio =
+        disponiveis[Math.floor(Math.random() * disponiveis.length)];
+
+      setVendedorSorteado(aleatorio);
+
+      vendedoresRecentesRef.current.add(aleatorio.id);
+      setTimeout(() => {
+        vendedoresRecentesRef.current.delete(aleatorio.id);
+      }, TEMPO_LIBERACAO);
+
+      // Abre o WhatsApp automaticamente
+      const telefone = aleatorio.telefone.replace(/\D/g, "");
+      window.open(`https://wa.me/55${telefone}`, "_blank");
+    }
+  } catch (error) {
+    console.error("Erro ao sortear vendedor:", error);
+    toast.error("Erro ao conectar com um vendedor.");
+  }
+};
   if (!carro) return <p>Carregando...</p>;
   const formatarPreco = (preco: number) => {
     return preco.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
@@ -225,16 +233,11 @@ export const Detalhes = () => {
 
         {vendedorSorteado && (
           <BotaoWhatsappContainer>
-            <BotaoWhatsapp
-              href={`https://wa.me/55${vendedorSorteado.telefone.replace(
-                /\D/g,
-                ""
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp size={20} /> Fale com um vendedor
-            </BotaoWhatsapp>
+           <BotaoWhatsappContainer>
+  <BotaoWhatsapp as="button" onClick={sortearVendedor}>
+    <FaWhatsapp size={20} /> Fale com um vendedor
+  </BotaoWhatsapp>
+</BotaoWhatsappContainer>
           </BotaoWhatsappContainer>
         )}
       </DetalhesContainer>
