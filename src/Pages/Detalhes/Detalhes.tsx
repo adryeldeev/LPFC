@@ -40,6 +40,13 @@ interface Marca {
   nome: string;
   logo: string;
 }
+interface Vendedor {
+  id: number;
+  nome: string;
+  telefone: string;
+  email: string;
+  whatsapp: string;
+}
 
 interface Imagem {
   id: number;
@@ -62,21 +69,17 @@ interface Carro {
   imagens: Imagem[];
 }
 
-interface Vendedor {
-  id: number;
-  nome: string;
-  telefone: string;
-}
+
 
  const Detalhes = () => {
   const { id } = useParams<{ id: string }>();
   const api = useApi();
   const [carro, setCarro] = useState<Carro | null>(null);
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
-  const [vendedorSorteado, setVendedorSorteado] = useState<Vendedor | null>(null);
   const [mostrarSlider, setMostrarSlider] = useState(false);
   const vendedoresBloqueadosRef = useRef<Map<number, number>>(new Map());
   const TEMPO_LIBERACAO = 5 * 60 * 1000; // 5 minutos
+   const [href, setHref] = useState("#");
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
   // Recupera bloqueios do localStorage no carregamento
@@ -92,87 +95,82 @@ interface Vendedor {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const carroRes = await api.get(`/carro/${id}`);
-        if (carroRes.status === 200) {
-          const data = carroRes.data as Carro;
 
-          const imagensOrdenadas = [...data.imagens].sort((a, b) => {
-            if (a.principal === b.principal) return 0;
-            return a.principal ? -1 : 1;
-          });
+   useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const carroRes = await api.get(`/carro/${id}`);
+      if (carroRes.status === 200) {
+        const data = carroRes.data as Carro;
 
-          setCarro({ ...data, imagens: imagensOrdenadas });
+        const imagensOrdenadas = [...data.imagens].sort((a, b) => {
+          if (a.principal === b.principal) return 0;
+          return a.principal ? -1 : 1;
+        });
 
-          if (imagensOrdenadas.length > 0) {
-            setImagemPrincipal(imagensOrdenadas[0].url);
-          }
+        setCarro({ ...data, imagens: imagensOrdenadas });
+
+        if (imagensOrdenadas.length > 0) {
+          setImagemPrincipal(imagensOrdenadas[0].url);
         }
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-        toast.error("Erro ao carregar dados. Tente novamente.");
       }
-    };
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+      toast.error("Erro ao carregar dados. Tente novamente.");
+    }
+  };
 
-    fetchData();
-  }, [id, api]);
-const sortearVendedor = () => {
-  // Abre uma nova aba *imediatamente* ao clique do usuário, antes do await
-  const novaJanela = window.open("", "_blank");
-
-  api.get("/vendedores-all")
-    .then((vendedoresRes) => {
+  fetchData(); // 👈 Faltava isso aqui
+}, [id, api]);
+const sortearVendedor = async () => {
+    try {
+      const vendedoresRes = await api.get("/vendedores-all");
       if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-        const vendedores = vendedoresRes.data as Vendedor[];
+        const vendedores = vendedoresRes.data;
         const agora = Date.now();
 
         // Remove bloqueios expirados
-        for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
+        for (const [id, timestamp] of vendedoresBloqueadosRef.current.entries()) {
           if (agora - timestamp > TEMPO_LIBERACAO) {
-            vendedoresBloqueadosRef.current.delete(vendedorId);
+            vendedoresBloqueadosRef.current.delete(id);
           }
         }
 
-        let disponiveis = vendedores.filter(
-          (v) => !vendedoresBloqueadosRef.current.has(v.id)
-        );
+      let disponiveis = (vendedores as Vendedor[]).filter((v: Vendedor) => !vendedoresBloqueadosRef.current.has(v.id));;
 
         if (disponiveis.length === 0) {
           vendedoresBloqueadosRef.current.clear();
-          disponiveis = [...vendedores];
+          disponiveis = vendedores;
         }
 
         const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-        setVendedorSorteado(aleatorio);
-
         vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
+
+        const numero = aleatorio.telefone.replace(/\D/g, "");
+        setHref(`https://wa.me/${numero}`);
+
+        // Salva localStorage se quiser
         localStorage.setItem(
           "bloqueiosVendedores",
           JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
         );
 
-        // Formata o link do WhatsApp
-        const telefone = aleatorio.telefone.replace(/\D/g, "");
-        const linkWhatsApp = `https://wa.me/55${telefone}`;
-
-        // Redireciona a aba já aberta
-        if (novaJanela) {
-          novaJanela.location.href = linkWhatsApp;
-        }
-      } else {
-        toast.error("Nenhum vendedor disponível no momento.");
-        if (novaJanela) novaJanela.close();
+        return true; // sorteio ok
       }
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error("Erro ao sortear vendedor:", error);
-      toast.error("Erro ao conectar com um vendedor.");
-      if (novaJanela) novaJanela.close();
-    });
-};
-
+    }
+    return false; // erro
+  };
+ // Controla o clique para garantir que o sorteio ocorreu antes de abrir
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault(); // previne abrir antes do sorteio
+    const ok = await sortearVendedor();
+    if (ok && href !== "#") {
+      window.open(href, "_blank", "noopener,noreferrer");
+    }
+  };
+  
   if (!carro) return <p>Carregando...</p>;
 
   const formatarPreco = (preco: number) => {
@@ -253,21 +251,13 @@ const sortearVendedor = () => {
         </InfoCarro>
 
       <BotaoWhatsappContainer>
-  {!vendedorSorteado ? (
-    <BotaoWhatsapp as="button" onClick={sortearVendedor}>
-      <FaWhatsapp size={20} /> Fale com um vendedor
+  
+     <BotaoWhatsapp href={href} onClick={handleClick} aria-label="Fale com vendedor no WhatsApp">
+        <FaWhatsapp size={24} />
+        <span>Fale com o vendedor</span>
+     
     </BotaoWhatsapp>
-  ) : (
-    <a
-      href={`https://wa.me/55${vendedorSorteado.telefone.replace(/\D/g, "")}`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <BotaoWhatsapp as="div">
-        <FaWhatsapp size={20} /> Falar com {vendedorSorteado.nome}
-      </BotaoWhatsapp>
-    </a>
-  )}
+  
 </BotaoWhatsappContainer>
       </DetalhesContainer>
 
