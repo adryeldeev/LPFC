@@ -119,54 +119,61 @@ interface Vendedor {
     fetchData();
   }, [id, api]);
 
-  const sortearVendedor = async () => {
-    try {
-      const vendedoresRes = await api.get("/vendedores-all");
-      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-        const vendedores = vendedoresRes.data as Vendedor[];
-        const agora = Date.now();
+const sortearVendedor = async () => {
+  try {
+    // Abre uma aba em branco imediatamente no clique
+    const novaAba = window.open("about:blank", "_blank");
 
-        // Remove bloqueios expirados
-        for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
-          if (agora - timestamp > TEMPO_LIBERACAO) {
-            vendedoresBloqueadosRef.current.delete(vendedorId);
-          }
+    const vendedoresRes = await api.get("/vendedores-all");
+    if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+      const vendedores = vendedoresRes.data as Vendedor[];
+      const agora = Date.now();
+
+      // Remove bloqueios expirados
+      for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
+        if (agora - timestamp > TEMPO_LIBERACAO) {
+          vendedoresBloqueadosRef.current.delete(vendedorId);
         }
-
-        // Filtra vendedores disponíveis (não bloqueados)
-        const disponiveis = vendedores.filter(
-          (v) => !vendedoresBloqueadosRef.current.has(v.id)
-        );
-
-        // Se não houver disponíveis, reseta bloqueios e permite todos
-        if (disponiveis.length === 0) {
-          vendedoresBloqueadosRef.current.clear();
-          disponiveis.push(...vendedores);
-        }
-
-        // Sorteia aleatório
-        const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-
-        setVendedorSorteado(aleatorio);
-
-        // Bloqueia o vendedor sorteado
-        vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
-
-        // Atualiza localStorage
-        localStorage.setItem(
-          "bloqueiosVendedores",
-          JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
-        );
-
-        // Abre WhatsApp
-        const telefone = aleatorio.telefone.replace(/\D/g, "");
-        window.open(`https://wa.me/55${telefone}`, "_blank");
       }
-    } catch (error) {
-      console.error("Erro ao sortear vendedor:", error);
-      toast.error("Erro ao conectar com um vendedor.");
+
+      // Filtra vendedores disponíveis (não bloqueados)
+      const disponiveis = vendedores.filter(
+        (v) => !vendedoresBloqueadosRef.current.has(v.id)
+      );
+
+      // Se não houver disponíveis, reseta bloqueios e permite todos
+      if (disponiveis.length === 0) {
+        vendedoresBloqueadosRef.current.clear();
+        disponiveis.push(...vendedores);
+      }
+
+      // Sorteia aleatório
+      const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+
+      setVendedorSorteado(aleatorio);
+
+      // Bloqueia o vendedor sorteado
+      vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
+
+      // Atualiza localStorage
+      localStorage.setItem(
+        "bloqueiosVendedores",
+        JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
+      );
+
+      // Redireciona a aba para o WhatsApp
+      const telefone = aleatorio.telefone.replace(/\D/g, "");
+      novaAba?.location.assign(`https://wa.me/55${telefone}`);
+    } else {
+      // Se não tiver vendedores, fecha a aba aberta
+      novaAba?.close();
+      toast.error("Nenhum vendedor disponível no momento.");
     }
-  };
+  } catch (error) {
+    console.error("Erro ao sortear vendedor:", error);
+    toast.error("Erro ao conectar com um vendedor.");
+  }
+};
 
   if (!carro) return <p>Carregando...</p>;
 
