@@ -60,7 +60,6 @@ interface Carro {
   portas: number;
   quilometragem: number;
   imagens: Imagem[];
-
 }
 
 interface Vendedor {
@@ -69,89 +68,110 @@ interface Vendedor {
   telefone: string;
 }
 
-export const Detalhes = () => {
+ const Detalhes = () => {
   const { id } = useParams<{ id: string }>();
   const api = useApi();
   const [carro, setCarro] = useState<Carro | null>(null);
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [vendedorSorteado, setVendedorSorteado] = useState<Vendedor | null>(null);
   const [mostrarSlider, setMostrarSlider] = useState(false);
-  const vendedoresRecentesRef = useRef<Set<number>>(new Set());
+  const vendedoresBloqueadosRef = useRef<Map<number, number>>(new Map());
   const TEMPO_LIBERACAO = 5 * 60 * 1000; // 5 minutos
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const carroRes = await api.get(`/carro/${id}`);
-      if (carroRes.status === 200) {
-        const data = carroRes.data as Carro;
-
-        // Ordena as imagens para colocar a principal primeiro
-        const imagensOrdenadas = [...data.imagens].sort((a, b) => {
-          if (a.principal === b.principal) return 0;
-          return a.principal ? -1 : 1;
-        });
-
-        const carroOrdenado = {
-          ...data,
-          imagens: imagensOrdenadas,
-        };
-
-        setCarro(carroOrdenado);
-
-        if (imagensOrdenadas.length > 0) {
-          setImagemPrincipal(imagensOrdenadas[0].url);
-        }
+  // Recupera bloqueios do localStorage no carregamento
+  useEffect(() => {
+    const bloqueiosSalvos = localStorage.getItem("bloqueiosVendedores");
+    if (bloqueiosSalvos) {
+      try {
+        const bloqueiosArray: [number, number][] = JSON.parse(bloqueiosSalvos);
+        vendedoresBloqueadosRef.current = new Map(bloqueiosArray);
+      } catch {
+        vendedoresBloqueadosRef.current = new Map();
       }
+    }
+  }, []);
 
-      
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const carroRes = await api.get(`/carro/${id}`);
+        if (carroRes.status === 200) {
+          const data = carroRes.data as Carro;
+
+          const imagensOrdenadas = [...data.imagens].sort((a, b) => {
+            if (a.principal === b.principal) return 0;
+            return a.principal ? -1 : 1;
+          });
+
+          setCarro({ ...data, imagens: imagensOrdenadas });
+
+          if (imagensOrdenadas.length > 0) {
+            setImagemPrincipal(imagensOrdenadas[0].url);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        toast.error("Erro ao carregar dados. Tente novamente.");
+      }
+    };
+
+    fetchData();
+  }, [id, api]);
+
+  const sortearVendedor = async () => {
+    try {
+      const vendedoresRes = await api.get("/vendedores-all");
+      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+        const vendedores = vendedoresRes.data as Vendedor[];
+        const agora = Date.now();
+
+        // Remove bloqueios expirados
+        for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
+          if (agora - timestamp > TEMPO_LIBERACAO) {
+            vendedoresBloqueadosRef.current.delete(vendedorId);
+          }
+        }
+
+        // Filtra vendedores disponíveis (não bloqueados)
+        const disponiveis = vendedores.filter(
+          (v) => !vendedoresBloqueadosRef.current.has(v.id)
+        );
+
+        // Se não houver disponíveis, reseta bloqueios e permite todos
+        if (disponiveis.length === 0) {
+          vendedoresBloqueadosRef.current.clear();
+          disponiveis.push(...vendedores);
+        }
+
+        // Sorteia aleatório
+        const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+
+        setVendedorSorteado(aleatorio);
+
+        // Bloqueia o vendedor sorteado
+        vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
+
+        // Atualiza localStorage
+        localStorage.setItem(
+          "bloqueiosVendedores",
+          JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
+        );
+
+        // Abre WhatsApp
+        const telefone = aleatorio.telefone.replace(/\D/g, "");
+        window.open(`https://wa.me/55${telefone}`, "_blank");
+      }
     } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-      toast.error("Erro ao carregar dados. Tente novamente.");
+      console.error("Erro ao sortear vendedor:", error);
+      toast.error("Erro ao conectar com um vendedor.");
     }
   };
 
-  fetchData();
-}, [id]);
-const sortearVendedor = async () => {
-  try {
-    const vendedoresRes = await api.get("/vendedores-all");
-    if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-      const vendedores = vendedoresRes.data as Vendedor[];
-
-      // Filtra os disponíveis
-      const disponiveis = vendedores.filter(
-        (v) => !vendedoresRecentesRef.current.has(v.id)
-      );
-
-      if (disponiveis.length === 0) {
-        vendedoresRecentesRef.current.clear();
-        disponiveis.push(...vendedores);
-      }
-
-      const aleatorio =
-        disponiveis[Math.floor(Math.random() * disponiveis.length)];
-
-      setVendedorSorteado(aleatorio);
-
-      vendedoresRecentesRef.current.add(aleatorio.id);
-      setTimeout(() => {
-        vendedoresRecentesRef.current.delete(aleatorio.id);
-      }, TEMPO_LIBERACAO);
-
-      // Abre o WhatsApp automaticamente
-      const telefone = aleatorio.telefone.replace(/\D/g, "");
-      window.open(`https://wa.me/55${telefone}`, "_blank");
-    }
-  } catch (error) {
-    console.error("Erro ao sortear vendedor:", error);
-    toast.error("Erro ao conectar com um vendedor.");
-  }
-};
   if (!carro) return <p>Carregando...</p>;
+
   const formatarPreco = (preco: number) => {
-    return preco.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
+    return preco.toLocaleString("pt-BR", { minimumFractionDigits: 0 });
   };
 
   return (
@@ -166,8 +186,7 @@ const sortearVendedor = async () => {
 
         <Miniaturas>
           {carro.imagens.slice(0, 4).map((img, index) => {
-            const isLastVisible =
-              index === 3 && carro.imagens.length > 4;
+            const isLastVisible = index === 3 && carro.imagens.length > 4;
 
             return (
               <MiniaturaWrapper
@@ -194,21 +213,18 @@ const sortearVendedor = async () => {
       <DetalhesContainer>
         <InfoCarro>
           <BoxMarcaPreco>
-            <img
-              src={`${baseUrl}${carro.marca.logo}`}
-              alt={carro.marca.nome}
-            />
+            <img src={`${baseUrl}${carro.marca.logo}`} alt={carro.marca.nome} />
             <div>
-              <h2>{carro.marca.nome} {carro.modelo}</h2>
-              <h3>
-                R$ {formatarPreco(carro.preco)}
-              </h3>
+              <h2>
+                {carro.marca.nome} {carro.modelo}
+              </h2>
+              <h3>R$ {formatarPreco(carro.preco)}</h3>
             </div>
           </BoxMarcaPreco>
 
           <BoxFichaTecnica>
             <div className="grid">
-              {[ 
+              {[
                 { icon: <FaCogs />, label: `Câmbio: ${carro.cambio}` },
                 { icon: <FaCalendarAlt />, label: `Ano: ${carro.ano}` },
                 {
@@ -231,18 +247,15 @@ const sortearVendedor = async () => {
           </BoxFichaTecnica>
         </InfoCarro>
 
-       <BotaoWhatsappContainer>
-  <BotaoWhatsapp as="button" onClick={sortearVendedor}>
-    <FaWhatsapp size={20} /> Fale com um vendedor
-  </BotaoWhatsapp>
-</BotaoWhatsappContainer>
-
+        <BotaoWhatsappContainer>
+          <BotaoWhatsapp as="button" onClick={sortearVendedor}>
+            <FaWhatsapp size={20} /> Fale com um vendedor
+          </BotaoWhatsapp>
+        </BotaoWhatsappContainer>
       </DetalhesContainer>
-      <CarrosSemelhantes
-        marca={carro.marca.nome}
-        carroIdAtual={String(carro.id)}
-      />
-        <Redes/>
+
+      <CarrosSemelhantes marca={carro.marca.nome} carroIdAtual={String(carro.id)} />
+      <Redes />
       <Mapa />
 
       {mostrarSlider && (
@@ -268,3 +281,4 @@ const sortearVendedor = async () => {
     </>
   );
 };
+export default Detalhes;
