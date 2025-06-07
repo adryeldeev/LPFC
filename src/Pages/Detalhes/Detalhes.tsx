@@ -162,14 +162,19 @@ const sortearVendedor = async () => {
     }
     return false; // erro
   };
- // Controla o clique para garantir que o sorteio ocorreu antes de abrir
-  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault(); // previne abrir antes do sorteio
-    const ok = await sortearVendedor();
-    if (ok && href !== "#") {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
-  };
+ useEffect(() => {
+  // Sorteia assim que o carro for carregado
+  if (carro) {
+    sortearVendedor(); // essa função define o href internamente
+  }
+}, [carro]);
+
+const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  if (href === "#") {
+    e.preventDefault(); // evita clicar num link inválido
+    toast.warn("Aguarde, estamos carregando o número do vendedor...");
+  }
+};
   
   if (!carro) return <p>Carregando...</p>;
 
