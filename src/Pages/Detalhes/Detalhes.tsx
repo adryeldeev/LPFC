@@ -118,45 +118,59 @@ interface Vendedor {
 
     fetchData();
   }, [id, api]);
+const sortearVendedor = () => {
+  // Abre uma nova aba *imediatamente* ao clique do usuário, antes do await
+  const novaJanela = window.open("", "_blank");
 
-const sortearVendedor = async () => {
-  try {
-    const vendedoresRes = await api.get("/vendedores-all");
-    if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-      const vendedores = vendedoresRes.data as Vendedor[];
-      const agora = Date.now();
+  api.get("/vendedores-all")
+    .then((vendedoresRes) => {
+      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+        const vendedores = vendedoresRes.data as Vendedor[];
+        const agora = Date.now();
 
-      // Remove bloqueios expirados
-      for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
-        if (agora - timestamp > TEMPO_LIBERACAO) {
-          vendedoresBloqueadosRef.current.delete(vendedorId);
+        // Remove bloqueios expirados
+        for (const [vendedorId, timestamp] of vendedoresBloqueadosRef.current.entries()) {
+          if (agora - timestamp > TEMPO_LIBERACAO) {
+            vendedoresBloqueadosRef.current.delete(vendedorId);
+          }
         }
+
+        let disponiveis = vendedores.filter(
+          (v) => !vendedoresBloqueadosRef.current.has(v.id)
+        );
+
+        if (disponiveis.length === 0) {
+          vendedoresBloqueadosRef.current.clear();
+          disponiveis = [...vendedores];
+        }
+
+        const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+        setVendedorSorteado(aleatorio);
+
+        vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
+        localStorage.setItem(
+          "bloqueiosVendedores",
+          JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
+        );
+
+        // Formata o link do WhatsApp
+        const telefone = aleatorio.telefone.replace(/\D/g, "");
+        const linkWhatsApp = `https://wa.me/55${telefone}`;
+
+        // Redireciona a aba já aberta
+        if (novaJanela) {
+          novaJanela.location.href = linkWhatsApp;
+        }
+      } else {
+        toast.error("Nenhum vendedor disponível no momento.");
+        if (novaJanela) novaJanela.close();
       }
-
-      const disponiveis = vendedores.filter(
-        (v) => !vendedoresBloqueadosRef.current.has(v.id)
-      );
-
-      if (disponiveis.length === 0) {
-        vendedoresBloqueadosRef.current.clear();
-        disponiveis.push(...vendedores);
-      }
-
-      const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-      setVendedorSorteado(aleatorio);
-
-      vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
-      localStorage.setItem(
-        "bloqueiosVendedores",
-        JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
-      );
-    } else {
-      toast.error("Nenhum vendedor disponível no momento.");
-    }
-  } catch (error) {
-    console.error("Erro ao sortear vendedor:", error);
-    toast.error("Erro ao conectar com um vendedor.");
-  }
+    })
+    .catch((error) => {
+      console.error("Erro ao sortear vendedor:", error);
+      toast.error("Erro ao conectar com um vendedor.");
+      if (novaJanela) novaJanela.close();
+    });
 };
 
   if (!carro) return <p>Carregando...</p>;
