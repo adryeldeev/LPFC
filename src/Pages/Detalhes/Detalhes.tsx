@@ -121,9 +121,6 @@ interface Vendedor {
 
 const sortearVendedor = async () => {
   try {
-    // Abre uma aba em branco imediatamente no clique
-    const novaAba = window.open("about:blank", "_blank");
-
     const vendedoresRes = await api.get("/vendedores-all");
     if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
       const vendedores = vendedoresRes.data as Vendedor[];
@@ -136,37 +133,24 @@ const sortearVendedor = async () => {
         }
       }
 
-      // Filtra vendedores disponíveis (não bloqueados)
       const disponiveis = vendedores.filter(
         (v) => !vendedoresBloqueadosRef.current.has(v.id)
       );
 
-      // Se não houver disponíveis, reseta bloqueios e permite todos
       if (disponiveis.length === 0) {
         vendedoresBloqueadosRef.current.clear();
         disponiveis.push(...vendedores);
       }
 
-      // Sorteia aleatório
       const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-
       setVendedorSorteado(aleatorio);
 
-      // Bloqueia o vendedor sorteado
       vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
-
-      // Atualiza localStorage
       localStorage.setItem(
         "bloqueiosVendedores",
         JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
       );
-
-      // Redireciona a aba para o WhatsApp
-      const telefone = aleatorio.telefone.replace(/\D/g, "");
-      novaAba?.location.assign(`https://wa.me/55${telefone}`);
     } else {
-      // Se não tiver vendedores, fecha a aba aberta
-      novaAba?.close();
       toast.error("Nenhum vendedor disponível no momento.");
     }
   } catch (error) {
@@ -254,11 +238,23 @@ const sortearVendedor = async () => {
           </BoxFichaTecnica>
         </InfoCarro>
 
-        <BotaoWhatsappContainer>
-          <BotaoWhatsapp as="button" onClick={sortearVendedor}>
-            <FaWhatsapp size={20} /> Fale com um vendedor
-          </BotaoWhatsapp>
-        </BotaoWhatsappContainer>
+      <BotaoWhatsappContainer>
+  {!vendedorSorteado ? (
+    <BotaoWhatsapp as="button" onClick={sortearVendedor}>
+      <FaWhatsapp size={20} /> Fale com um vendedor
+    </BotaoWhatsapp>
+  ) : (
+    <a
+      href={`https://wa.me/55${vendedorSorteado.telefone.replace(/\D/g, "")}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <BotaoWhatsapp as="div">
+        <FaWhatsapp size={20} /> Falar com {vendedorSorteado.nome}
+      </BotaoWhatsapp>
+    </a>
+  )}
+</BotaoWhatsappContainer>
       </DetalhesContainer>
 
       <CarrosSemelhantes marca={carro.marca.nome} carroIdAtual={String(carro.id)} />
