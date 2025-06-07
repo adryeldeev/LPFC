@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -76,49 +76,70 @@ export const Detalhes = () => {
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [vendedorSorteado, setVendedorSorteado] = useState<Vendedor | null>(null);
   const [mostrarSlider, setMostrarSlider] = useState(false);
+  const vendedoresRecentesRef = useRef<Set<number>>(new Set());
+  const TEMPO_LIBERACAO = 5 * 60 * 1000; // 5 minutos
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const carroRes = await api.get(`/carro/${id}`);
-       if (carroRes.status === 200) {
-  const data = carroRes.data as Carro;
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const carroRes = await api.get(`/carro/${id}`);
+      if (carroRes.status === 200) {
+        const data = carroRes.data as Carro;
 
-  // Ordena as imagens para colocar a principal primeiro
-  const imagensOrdenadas = [...data.imagens].sort((a, b) => {
-    if (a.principal === b.principal) return 0;
-    return a.principal ? -1 : 1;
-  });
+        // Ordena as imagens para colocar a principal primeiro
+        const imagensOrdenadas = [...data.imagens].sort((a, b) => {
+          if (a.principal === b.principal) return 0;
+          return a.principal ? -1 : 1;
+        });
 
-  // Atualiza o objeto data com as imagens ordenadas
-  const carroOrdenado = {
-    ...data,
-    imagens: imagensOrdenadas,
+        const carroOrdenado = {
+          ...data,
+          imagens: imagensOrdenadas,
+        };
+
+        setCarro(carroOrdenado);
+
+        if (imagensOrdenadas.length > 0) {
+          setImagemPrincipal(imagensOrdenadas[0].url);
+        }
+      }
+
+      // --- Sorteio com controle de repetição ---
+      const vendedoresRes = await api.get("/vendedores-all");
+      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+        const vendedores = vendedoresRes.data as Vendedor[];
+
+        // Filtra os disponíveis (que não estão no histórico)
+        const disponiveis = vendedores.filter(
+          (v) => !vendedoresRecentesRef.current.has(v.id)
+        );
+
+        // Se todos foram sorteados recentemente, limpa o histórico
+        if (disponiveis.length === 0) {
+          vendedoresRecentesRef.current.clear();
+          disponiveis.push(...vendedores);
+        }
+
+        // Sorteia um aleatório dos disponíveis
+        const aleatorio =
+          disponiveis[Math.floor(Math.random() * disponiveis.length)];
+        setVendedorSorteado(aleatorio);
+
+        // Adiciona ao histórico e agenda liberação após o tempo definido
+        vendedoresRecentesRef.current.add(aleatorio.id);
+        setTimeout(() => {
+          vendedoresRecentesRef.current.delete(aleatorio.id);
+        }, TEMPO_LIBERACAO);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+      toast.error("Erro ao carregar dados. Tente novamente.");
+    }
   };
 
-  setCarro(carroOrdenado);
-
-  if (imagensOrdenadas.length > 0) {
-    setImagemPrincipal(imagensOrdenadas[0].url);
-  }
-}
-
-        const vendedoresRes = await api.get("/vendedores-all");
-        if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-          const vendedores = vendedoresRes.data as Vendedor[];
-          const aleatorio =
-            vendedores[Math.floor(Math.random() * vendedores.length)];
-          setVendedorSorteado(aleatorio);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-        toast.error("Erro ao carregar dados. Tente novamente.");
-      }
-    };
-
-    fetchData();
-  }, [id]);
+  fetchData();
+}, [id]);
 
   if (!carro) return <p>Carregando...</p>;
   const formatarPreco = (preco: number) => {
