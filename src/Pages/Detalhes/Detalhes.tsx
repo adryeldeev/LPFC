@@ -231,15 +231,12 @@ const sortearVendedor = async () => {
           </BoxFichaTecnica>
         </InfoCarro>
 
-        {vendedorSorteado && (
-          <BotaoWhatsappContainer>
-           <BotaoWhatsappContainer>
+       <BotaoWhatsappContainer>
   <BotaoWhatsapp as="button" onClick={sortearVendedor}>
     <FaWhatsapp size={20} /> Fale com um vendedor
   </BotaoWhatsapp>
 </BotaoWhatsappContainer>
-          </BotaoWhatsappContainer>
-        )}
+
       </DetalhesContainer>
       <CarrosSemelhantes
         marca={carro.marca.nome}
