@@ -7,9 +7,9 @@ import Estoque from "./Pages/Estoque/Estoque";
 import Sobre from "./Pages/Sobre/Sobre";
 import Financiar from "./Pages/Financiar/Financiar";
 
-import { Detalhes } from "./Pages/Detalhes/Detalhes";
 import Venda from "./Pages/Vendas/Vendas"
 import AuthProvider from "./Context/AuthProvider";
+import Detalhes from "./Pages/Detalhes/Detalhes";
 
 
 
