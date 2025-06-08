@@ -166,26 +166,17 @@ const sortearVendedor = async (): Promise<string | null> => {
   return null;
 };
 
-const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  e.preventDefault();
-
-  const novaAba = window.open("/redirect.html", "_blank"); // Página intermediária
-
-  if (!novaAba) {
-    toast.error("Por favor, permita pop-ups para abrir o WhatsApp.");
-    return;
-  }
+const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault(); // Impede navegação padrão
 
   toast.info("Sorteando vendedor...");
 
   const link = await sortearVendedor();
 
   if (link) {
-    // Armazena o link no sessionStorage (compartilhado entre abas)
-    sessionStorage.setItem("redirectLink", link);
+    window.location.href = link; // ✅ Redirecionamento imediato (não bloqueado)
   } else {
     toast.error("Não foi possível encontrar um vendedor.");
-    novaAba.close();
   }
 };
   if (!carro) return <p>Carregando...</p>;
@@ -270,12 +261,14 @@ const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
       <BotaoWhatsappContainer>
   
    <BotaoWhatsapp
-  onClick={handleClick}
-  aria-label="Fale com vendedor no WhatsApp"
->
-  <FaWhatsapp size={24} />
-  <span>Fale com o vendedor</span>
-</BotaoWhatsapp>
+      as="a"
+      href="#"
+      onClick={handleClick}
+      aria-label="Fale com o vendedor"
+    >
+      <FaWhatsapp size={24} />
+      <span>Fale com o vendedor</span>
+    </BotaoWhatsapp>
   
 </BotaoWhatsappContainer>
       </DetalhesContainer>
