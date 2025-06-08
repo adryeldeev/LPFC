@@ -79,7 +79,6 @@ interface Carro {
   const [mostrarSlider, setMostrarSlider] = useState(false);
   const vendedoresBloqueadosRef = useRef<Map<number, number>>(new Map());
   const TEMPO_LIBERACAO = 5 * 60 * 1000; // 5 minutos
-   const [href, setHref] = useState("#");
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
   // Recupera bloqueios do localStorage no carregamento
@@ -122,9 +121,10 @@ interface Carro {
 
   fetchData(); // 👈 Faltava isso aqui
 }, [id, api]);
-const sortearVendedor = async (): Promise<Vendedor | null> => {
+const sortearVendedor = async (): Promise<string | null> => {
   try {
     const vendedoresRes = await api.get("/vendedores-all");
+
     if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
       const vendedores = vendedoresRes.data;
       const agora = Date.now();
@@ -137,7 +137,7 @@ const sortearVendedor = async (): Promise<Vendedor | null> => {
       }
 
       let disponiveis = (vendedores as Vendedor[]).filter(
-        (v: Vendedor) => !vendedoresBloqueadosRef.current.has(v.id)
+        (v) => !vendedoresBloqueadosRef.current.has(v.id)
       );
 
       if (disponiveis.length === 0) {
@@ -149,7 +149,7 @@ const sortearVendedor = async (): Promise<Vendedor | null> => {
       vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
 
       const numero = aleatorio.telefone.replace(/\D/g, "");
-      setHref(`https://wa.me/${numero}`);
+      const link = `https://wa.me/${numero}`;
 
       // Salva localStorage se quiser
       localStorage.setItem(
@@ -157,41 +157,35 @@ const sortearVendedor = async (): Promise<Vendedor | null> => {
         JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
       );
 
-      return aleatorio; // retorna o vendedor sorteado
+      return link;
     }
   } catch (error) {
     console.error("Erro ao sortear vendedor:", error);
   }
-  return null; // erro
-};
- useEffect(() => {
-  // Sorteia assim que o carro for carregado
-  if (carro) {
-    sortearVendedor(); // essa função define o href internamente
-  }
-}, [carro]);
 
-const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  return null;
+};
+
+const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
 
-  // Se já tem href válido, pode redirecionar
-  if (href && href !== "#") {
-    window.open(href, "_blank"); // ou window.location.href = href;
+  const novaAba = window.open("about:blank", "_blank");
+
+  if (!novaAba) {
+    toast.error("Por favor, permita pop-ups para abrir o WhatsApp.");
     return;
   }
 
-  // Sorteia o vendedor na hora do clique (pode ser lento no Safari)
   toast.info("Sorteando vendedor...");
-  const vendedor = await sortearVendedor();
-  if (vendedor && vendedor.telefone) {
-    const numero = vendedor.telefone.replace(/\D/g, "");
-    const link = `https://wa.me/${numero}`;
-    window.open(link, "_blank");
+  const link = await sortearVendedor();
+
+  if (link) {
+    novaAba.location.href = link;
   } else {
+    novaAba.close();
     toast.error("Não foi possível encontrar um vendedor.");
   }
 };
-  
   if (!carro) return <p>Carregando...</p>;
 
   const formatarPreco = (preco: number) => {
@@ -273,11 +267,13 @@ const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
 
       <BotaoWhatsappContainer>
   
-     <BotaoWhatsapp href={href} onClick={handleClick} aria-label="Fale com vendedor no WhatsApp">
-        <FaWhatsapp size={24} />
-        <span>Fale com o vendedor</span>
-     
-    </BotaoWhatsapp>
+   <BotaoWhatsapp
+  onClick={handleClick}
+  aria-label="Fale com vendedor no WhatsApp"
+>
+  <FaWhatsapp size={24} />
+  <span>Fale com o vendedor</span>
+</BotaoWhatsapp>
   
 </BotaoWhatsappContainer>
       </DetalhesContainer>

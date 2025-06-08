@@ -256,7 +256,7 @@ export const BotaoWhatsappContainer = styled.div`
   }
 `;
 
-export const BotaoWhatsapp = styled.a`
+export const BotaoWhatsapp = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
