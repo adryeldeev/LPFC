@@ -122,46 +122,48 @@ interface Carro {
 
   fetchData(); // 👈 Faltava isso aqui
 }, [id, api]);
-const sortearVendedor = async () => {
-    try {
-      const vendedoresRes = await api.get("/vendedores-all");
-      if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
-        const vendedores = vendedoresRes.data;
-        const agora = Date.now();
+const sortearVendedor = async (): Promise<Vendedor | null> => {
+  try {
+    const vendedoresRes = await api.get("/vendedores-all");
+    if (vendedoresRes.status === 200 && vendedoresRes.data.length > 0) {
+      const vendedores = vendedoresRes.data;
+      const agora = Date.now();
 
-        // Remove bloqueios expirados
-        for (const [id, timestamp] of vendedoresBloqueadosRef.current.entries()) {
-          if (agora - timestamp > TEMPO_LIBERACAO) {
-            vendedoresBloqueadosRef.current.delete(id);
-          }
+      // Remove bloqueios expirados
+      for (const [id, timestamp] of vendedoresBloqueadosRef.current.entries()) {
+        if (agora - timestamp > TEMPO_LIBERACAO) {
+          vendedoresBloqueadosRef.current.delete(id);
         }
-
-      let disponiveis = (vendedores as Vendedor[]).filter((v: Vendedor) => !vendedoresBloqueadosRef.current.has(v.id));;
-
-        if (disponiveis.length === 0) {
-          vendedoresBloqueadosRef.current.clear();
-          disponiveis = vendedores;
-        }
-
-        const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-        vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
-
-        const numero = aleatorio.telefone.replace(/\D/g, "");
-        setHref(`https://wa.me/${numero}`);
-
-        // Salva localStorage se quiser
-        localStorage.setItem(
-          "bloqueiosVendedores",
-          JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
-        );
-
-        return true; // sorteio ok
       }
-    } catch (error) {
-      console.error("Erro ao sortear vendedor:", error);
+
+      let disponiveis = (vendedores as Vendedor[]).filter(
+        (v: Vendedor) => !vendedoresBloqueadosRef.current.has(v.id)
+      );
+
+      if (disponiveis.length === 0) {
+        vendedoresBloqueadosRef.current.clear();
+        disponiveis = vendedores;
+      }
+
+      const aleatorio = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+      vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
+
+      const numero = aleatorio.telefone.replace(/\D/g, "");
+      setHref(`https://wa.me/${numero}`);
+
+      // Salva localStorage se quiser
+      localStorage.setItem(
+        "bloqueiosVendedores",
+        JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
+      );
+
+      return aleatorio; // retorna o vendedor sorteado
     }
-    return false; // erro
-  };
+  } catch (error) {
+    console.error("Erro ao sortear vendedor:", error);
+  }
+  return null; // erro
+};
  useEffect(() => {
   // Sorteia assim que o carro for carregado
   if (carro) {
@@ -169,10 +171,24 @@ const sortearVendedor = async () => {
   }
 }, [carro]);
 
-const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  if (href === "#") {
-    e.preventDefault(); // evita clicar num link inválido
-    toast.warn("Aguarde, estamos carregando o número do vendedor...");
+const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+
+  // Se já tem href válido, pode redirecionar
+  if (href && href !== "#") {
+    window.open(href, "_blank"); // ou window.location.href = href;
+    return;
+  }
+
+  // Sorteia o vendedor na hora do clique (pode ser lento no Safari)
+  toast.info("Sorteando vendedor...");
+  const vendedor = await sortearVendedor();
+  if (vendedor && vendedor.telefone) {
+    const numero = vendedor.telefone.replace(/\D/g, "");
+    const link = `https://wa.me/${numero}`;
+    window.open(link, "_blank");
+  } else {
+    toast.error("Não foi possível encontrar um vendedor.");
   }
 };
   
