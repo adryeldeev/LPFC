@@ -166,22 +166,28 @@ const sortearVendedor = async (): Promise<string | null> => {
   return null;
 };
 
-const handleClick = async () => {
-  toast.info("Sorteando vendedor...");
+const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
 
-  const link = await sortearVendedor();
-  if (!link) {
-    toast.error("Não foi possível encontrar um vendedor.");
+  const novaAba = window.open("/redirect.html", "_blank"); // Página intermediária
+
+  if (!novaAba) {
+    toast.error("Por favor, permita pop-ups para abrir o WhatsApp.");
     return;
   }
 
-  // Cria link e dispara clique simulado
-  const a = document.createElement("a");
-  a.href = link;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  a.click();
-}
+  toast.info("Sorteando vendedor...");
+
+  const link = await sortearVendedor();
+
+  if (link) {
+    // Armazena o link no sessionStorage (compartilhado entre abas)
+    sessionStorage.setItem("redirectLink", link);
+  } else {
+    toast.error("Não foi possível encontrar um vendedor.");
+    novaAba.close();
+  }
+};
   if (!carro) return <p>Carregando...</p>;
 
   const formatarPreco = (preco: number) => {

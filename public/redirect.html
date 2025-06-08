@@ -1,0 +1,31 @@
+<!-- public/redirect.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecionando...</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <p>Redirecionando para o WhatsApp...</p>
+
+  <script>
+    const link = sessionStorage.getItem("redirectLink");
+
+    if (link) {
+      window.location.href = link;
+    } else {
+      document.body.innerHTML = "<p>Não foi possível redirecionar. Link não encontrado.</p>";
+    }
+  </script>
+</body>
+</html>
