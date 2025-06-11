@@ -11,7 +11,8 @@ import {
   NavList,
 } from './NavbarStyled';
 import Logo2 from '../../assets/Logo.webp';
-
+import { FiX } from 'react-icons/fi';
+import { IoMdMenu } from "react-icons/io";
 const NavbarPublic = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -72,7 +73,7 @@ const NavbarPublic = () => {
         </NavList>
 
         <MenuIcon id="menu-icon" onClick={toggleMenu}>
-          {open ? 'X' : '☰'}
+          {open ?<FiX size={24} /> : <IoMdMenu size={24} />}
         </MenuIcon>
       </Nav>
 
