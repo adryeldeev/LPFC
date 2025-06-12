@@ -78,6 +78,7 @@ interface Carro {
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [mostrarSlider, setMostrarSlider] = useState(false);
   const vendedoresBloqueadosRef = useRef<Map<number, number>>(new Map());
+  const imagemSetadaPeloUsuario = useRef(false);
   const TEMPO_LIBERACAO = 5 * 60 * 1000; // 5 minutos
   const baseUrl = "https://my-first-project-repo-production.up.railway.app";
 
@@ -109,9 +110,9 @@ interface Carro {
 
         setCarro({ ...data, imagens: imagensOrdenadas });
 
-        if (imagensOrdenadas.length > 0) {
-          setImagemPrincipal(imagensOrdenadas[0].url);
-        }
+       if (imagensOrdenadas.length > 0 && !imagemSetadaPeloUsuario.current) {
+  setImagemPrincipal(imagensOrdenadas[0].url);
+}
       }
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -129,7 +130,6 @@ const sortearVendedor = async (): Promise<string | null> => {
       const vendedores = vendedoresRes.data;
       const agora = Date.now();
 
-      // Remove bloqueios expirados
       for (const [id, timestamp] of vendedoresBloqueadosRef.current.entries()) {
         if (agora - timestamp > TEMPO_LIBERACAO) {
           vendedoresBloqueadosRef.current.delete(id);
@@ -149,9 +149,9 @@ const sortearVendedor = async (): Promise<string | null> => {
       vendedoresBloqueadosRef.current.set(aleatorio.id, agora);
 
       const numero = aleatorio.telefone.replace(/\D/g, "");
-      const link = `https://wa.me/${numero}`;
+      const mensagem = `Olá, estou interessado no ${carro?.marca.nome} ${carro?.modelo}. Gostaria de mais informações.`;
+      const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 
-      // Salva localStorage se quiser
       localStorage.setItem(
         "bloqueiosVendedores",
         JSON.stringify(Array.from(vendedoresBloqueadosRef.current.entries()))
@@ -165,7 +165,6 @@ const sortearVendedor = async (): Promise<string | null> => {
 
   return null;
 };
-
 const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault(); // Impede navegação padrão
 
@@ -202,13 +201,14 @@ const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
             return (
               <MiniaturaWrapper
                 key={img.id}
-                onClick={() => {
-                  if (isLastVisible) {
-                    setMostrarSlider(true);
-                  } else {
-                    setImagemPrincipal(img.url);
-                  }
-                }}
+              onClick={() => {
+  if (isLastVisible) {
+    setMostrarSlider(true);
+  } else {
+    imagemSetadaPeloUsuario.current = true;
+    setImagemPrincipal(img.url);
+  }
+}}
               >
                 <img
                   src={`${baseUrl}/uploads/carros/${img.url}`}
